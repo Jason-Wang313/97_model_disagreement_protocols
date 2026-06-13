@@ -1,8 +1,16 @@
-observed_only_wam nominal success=0.545 tail_risk=0.455
-observed_only_wam hidden_mode_shift success=0.133 tail_risk=0.867
-augmentation_as_data_wam nominal success=0.615 tail_risk=0.385
-augmentation_as_data_wam hidden_mode_shift success=0.287 tail_risk=0.713
-scalar_uncertainty_wam nominal success=0.680 tail_risk=0.320
-scalar_uncertainty_wam hidden_mode_shift success=0.360 tail_risk=0.640
-proposed_branch_mechanism nominal success=0.777 tail_risk=0.223
-proposed_branch_mechanism hidden_mode_shift success=0.537 tail_risk=0.463
+Submission-hardening experiment for paper 97 model_disagreement_protocols
+Seven seeds, 600 episodes per seed, strong baselines, ablations, stress sweep, and negative cases.
+observed_only_behavior_clone hidden_mode_shift mean_success=0.4169 ci95=0.0203 tail=0.5831
+observed_only_behavior_clone combined_stress mean_success=0.3381 ci95=0.0196 tail=0.6619
+data_augmentation_wam hidden_mode_shift mean_success=0.4928 ci95=0.0178 tail=0.5072
+data_augmentation_wam combined_stress mean_success=0.4157 ci95=0.0142 tail=0.5843
+scalar_uncertainty_planner hidden_mode_shift mean_success=0.5695 ci95=0.0189 tail=0.4305
+scalar_uncertainty_planner combined_stress mean_success=0.5121 ci95=0.0176 tail=0.4879
+ensemble_disagreement_planner hidden_mode_shift mean_success=0.5974 ci95=0.0103 tail=0.4026
+ensemble_disagreement_planner combined_stress mean_success=0.5474 ci95=0.0124 tail=0.4526
+conformal_risk_filter hidden_mode_shift mean_success=0.6214 ci95=0.0175 tail=0.3786
+conformal_risk_filter combined_stress mean_success=0.5633 ci95=0.0215 tail=0.4367
+proposed_branch_mechanism hidden_mode_shift mean_success=0.7038 ci95=0.0165 tail=0.2962
+proposed_branch_mechanism combined_stress mean_success=0.6645 ci95=0.0081 tail=0.3355
+oracle_branch_upper_bound hidden_mode_shift mean_success=0.7745 ci95=0.0143 tail=0.2255
+oracle_branch_upper_bound combined_stress mean_success=0.7443 ci95=0.0145 tail=0.2557
