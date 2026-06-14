@@ -1,7 +1,9 @@
 # Novelty Decision
 
-Chosen thesis: Model Disagreement Protocols turns the seed bet into a mechanism: Define action protocols that distinguish useful model disagreement from noise.
+Chosen thesis: classify model disagreement and map it to robot action protocols.
 
-New central mechanism: Model disagreement protocols keeps action-critical alternatives explicit until a physical observation collapses them.
+Decision after v4 evidence: KILL_ARCHIVE.
 
-Decision: proceed as a revise/workshop-strength ICLR-style draft with synthetic but runnable evidence.
+Reason: the claimed novelty is not empirically decisive. The audit shows better useful-disagreement recall, but the full mechanism loses to failure-aware recovery on task success and regret, and ablations remove parts of the proposed mechanism without hurting the measured objective.
+
+Future revival would need evidence that the type-to-protocol mechanism, not merely recovery/fallback, causes robust robot performance gains.

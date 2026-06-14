@@ -1,19 +1,25 @@
 # Experiment Rigor Checklist
 
-## v2 Synthetic Rigor
+## v4 Completed
+
+- [x] Paper-specific benchmark rather than the old generic branch scaffold.
 - [x] Multiple seeds.
-- [x] Error bars.
-- [x] Stronger synthetic baselines.
+- [x] Strong non-oracle baselines.
 - [x] Ablations.
-- [x] Stress tests.
-- [x] Negative cases.
+- [x] Stress splits and maximum-stress sweep.
+- [x] Uncertainty/calibration metrics.
+- [x] Safety and regret metrics.
+- [x] Pairwise seed/task/family comparisons.
+- [x] Failure cases.
+- [x] Generated figures and LaTeX result tables.
+- [x] Explicit terminal gate in `results/summary.txt`.
 
-## ICLR Main Bar
-- [ ] Real-robot validation.
+## ICLR Main Bar Not Met
+
+- [ ] Real robot validation.
 - [ ] High-fidelity simulator benchmark.
-- [ ] Implemented learned model.
-- [ ] Implemented real competing baselines.
-- [ ] Manual related-work synthesis.
-- [ ] Paper-specific qualitative figures.
+- [ ] Trained learned model checkpoint.
+- [ ] External benchmark suite comparison.
+- [ ] Evidence that full method beats robust fallback and failure-aware recovery.
 
-Decision: fail ICLR main empirical-rigor gate; archive.
+Decision: fail ICLR-main empirical-rigor gate; archive.

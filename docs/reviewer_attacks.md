@@ -1,8 +1,10 @@
 # Reviewer Attacks
 
-- This is only uncertainty with different words.
-- The evidence is synthetic and may not transfer to real hardware.
-- The hostile prior work already contains contact-aware world models.
-- The proposed mechanism may be too specialized for broad ICLR interest.
+- The proposed protocol loses to failure-aware recovery on the hardest split.
+- The protocol has lower regret than weak uncertainty baselines but higher regret than failure-aware recovery and robust fallback.
+- The safest baselines already reach essentially zero unsafe commits.
+- The probe and cost-model ablations undermine the claimed mechanism.
+- The benchmark is local and simulated; no hardware or high-fidelity validation is claimed.
+- The hostile literature already covers uncertainty, robust fallback, diagnostic probing, world models, and self-recovery.
 
-Response: the paper must emphasize branch semantics, explicit failure conditions, and honest synthetic scope.
+Response: accept the attacks and archive the paper. The v4 result is useful because it prevents an overstated submission.

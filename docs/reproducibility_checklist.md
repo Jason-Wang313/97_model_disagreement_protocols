@@ -1,19 +1,30 @@
 # Reproducibility Checklist
 
-## What Reproduces
+## Reproduces Locally
+
 - [x] `python src/run_experiment.py`
+- [x] `results/summary.txt`
 - [x] `results/metrics.csv`
-- [x] `results/raw_seed_metrics.csv`
+- [x] `results/seed_task_family_metrics.csv`
+- [x] `results/per_task_family_metrics.csv`
+- [x] `results/pairwise_stats.csv`
 - [x] `results/ablation_metrics.csv`
+- [x] `results/ablation_seed_metrics.csv`
 - [x] `results/stress_sweep.csv`
-- [x] `results/negative_cases.csv`
+- [x] `results/stress_sweep_seed_metrics.csv`
+- [x] `results/failure_cases.csv`
+- [x] `results/combined_stress_table.tex`
+- [x] `results/ablation_table.tex`
+- [x] `results/pairwise_decision_table.tex`
+- [x] Figures in `figures/`
 - [x] `paper/main.tex`
-- [x] Canonical PDF: `C:/Users/wangz/Downloads/97.pdf`
+- [x] Canonical PDF target: `C:/Users/wangz/Downloads/97.pdf`
 
-## What Does Not Reproduce
-- [ ] Real robot results.
-- [ ] High-fidelity benchmark runs.
-- [ ] Trained WAM checkpoints.
-- [ ] Competing learned baselines.
+## Does Not Reproduce
 
-This is reproducible as an archive memo and synthetic stress test, not as an ICLR-main robotics system paper.
+- [ ] Real robot runs.
+- [ ] High-fidelity simulator rollouts.
+- [ ] Learned model checkpoints.
+- [ ] External robot benchmark comparisons.
+
+This is reproducible as a negative local evidence audit, not as a deployable robotics system paper.

@@ -1,26 +1,21 @@
-        # Hostile Reviewer Response
+# Hostile Reviewer Response
 
-        Paper: 97 Model Disagreement Protocols
+Paper: 97 Model Disagreement Protocols
 
-        ## Strongest Technical Threats
-        - ManipArena: Comprehensive Real-world Evaluation of Reasoning-Oriented Generalist Robot Manipulation (2026)
-- Benchmarking Robust Machine Learning Models Under Data Imperfections in Real-World Data Science Scenarios (2026)
-- Failure-Aware RL: Reliable Offline-to-Online Reinforcement Learning with Self-Recovery for Real-World Manipulation (2026)
-- Evaluating Large Language Model Ensembles as Probabilistic Forecasters: An Empirical Study on Live Real-World Events (n.d.)
-- Agile science: creating useful products for behavior change in the real world (2016)
-- WorldBench: Disambiguating Physics for Diagnostic Evaluation of World Models (2026)
-- HY-Embodied-0.5: Embodied Foundation Models for Real-World Agents (2026)
-- Self-Supervised Learning for Generalizable AI: Bridging the Gap Between Pretraining and Real-World Deployment (2025)
+## Strongest Technical Threats
 
-        ## ICLR Main Response
-        A hostile ICLR reviewer would be correct to reject this as a main-conference submission. The v2 paper has reproducible synthetic evidence and careful limitations, but it does not contain the real robot, high-fidelity simulator, learned model, or manual related-work depth needed for the ICLR main track.
+- ManipArena-style real-world manipulation evaluation.
+- Robust ML under data imperfections.
+- Failure-aware RL with self-recovery for manipulation.
+- Ensemble probabilistic forecasting.
+- WorldBench-style diagnostic physical disambiguation.
+- Embodied foundation models and physical world models.
+- Classical robust control under uncertain dynamics.
 
-        ## Honest Action
-        The paper is marked `KILL_ARCHIVE`. This avoids converting a generated workshop-style idea into an overstated main-conference claim.
+## Hostile Review
 
-        ## What Would Be Needed To Revive
-        - Real robot or high-fidelity benchmark experiments.
-        - Implemented model and baselines, not synthetic probability tables.
-        - Manual full-paper related-work audit.
-        - Paper-specific writing and figures.
-        - Evidence that the core mechanism is learned and useful under deployment shift.
+A hostile reviewer would not reject only because the benchmark is local. They would reject because the local benchmark itself fails to validate the claimed mechanism. The proposed protocol reaches good useful-disagreement recall, but failure-aware recovery has higher combined-stress task success and lower regret, and stripped variants match or beat the full method on success/regret.
+
+## Honest Response
+
+We accept the rejection. The evidence says the useful part may be closed-loop recovery/fallback, not the full disagreement taxonomy. The paper should remain an archive unless a future version demonstrates the full protocol on real or high-fidelity robot tasks.
