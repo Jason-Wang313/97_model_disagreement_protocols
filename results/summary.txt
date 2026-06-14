@@ -1,16 +1,46 @@
-Submission-hardening experiment for paper 97 model_disagreement_protocols
-Seven seeds, 600 episodes per seed, strong baselines, ablations, stress sweep, and negative cases.
-observed_only_behavior_clone hidden_mode_shift mean_success=0.4169 ci95=0.0203 tail=0.5831
-observed_only_behavior_clone combined_stress mean_success=0.3381 ci95=0.0196 tail=0.6619
-data_augmentation_wam hidden_mode_shift mean_success=0.4928 ci95=0.0178 tail=0.5072
-data_augmentation_wam combined_stress mean_success=0.4157 ci95=0.0142 tail=0.5843
-scalar_uncertainty_planner hidden_mode_shift mean_success=0.5695 ci95=0.0189 tail=0.4305
-scalar_uncertainty_planner combined_stress mean_success=0.5121 ci95=0.0176 tail=0.4879
-ensemble_disagreement_planner hidden_mode_shift mean_success=0.5974 ci95=0.0103 tail=0.4026
-ensemble_disagreement_planner combined_stress mean_success=0.5474 ci95=0.0124 tail=0.4526
-conformal_risk_filter hidden_mode_shift mean_success=0.6214 ci95=0.0175 tail=0.3786
-conformal_risk_filter combined_stress mean_success=0.5633 ci95=0.0215 tail=0.4367
-proposed_branch_mechanism hidden_mode_shift mean_success=0.7038 ci95=0.0165 tail=0.2962
-proposed_branch_mechanism combined_stress mean_success=0.6645 ci95=0.0081 tail=0.3355
-oracle_branch_upper_bound hidden_mode_shift mean_success=0.7745 ci95=0.0143 tail=0.2255
-oracle_branch_upper_bound combined_stress mean_success=0.7443 ci95=0.0145 tail=0.2557
+Paper 97: model_disagreement_protocols v4 evidence audit
+Terminal decision: KILL_ARCHIVE
+Design: 5 robotics tasks x 7 disagreement families x 5 splits x 9 methods, 7 seeds, 88 episodes per seed/task/family/method group.
+Claim under test: disagreement helps only when classified into an action protocol (commit, probe, switch controller, abstain, recover).
+
+Combined-stress evidence:
+- oracle_disagreement_type: success=0.718 +/- 0.012, unsafe=0.000, type_acc=1.000, recall=0.999, noise_false_alarm=0.145, cost=0.171, regret=0.000
+- failure_aware_rl_recovery: success=0.701 +/- 0.017, unsafe=0.000, type_acc=0.225, recall=0.823, noise_false_alarm=0.300, cost=0.198, regret=0.051
+- robust_mpc_fallback: success=0.649 +/- 0.012, unsafe=0.000, type_acc=0.159, recall=0.752, noise_false_alarm=0.300, cost=0.164, regret=0.082
+- proposed_disagreement_protocol: success=0.637 +/- 0.013, unsafe=0.000, type_acc=0.496, recall=0.972, noise_false_alarm=0.170, cost=0.214, regret=0.111
+- ensemble_forecasting_calibrator: success=0.562 +/- 0.007, unsafe=0.001, type_acc=0.328, recall=0.551, noise_false_alarm=0.186, cost=0.121, regret=0.123
+- worldbench_diagnostic_probe: success=0.531 +/- 0.008, unsafe=0.000, type_acc=0.441, recall=0.971, noise_false_alarm=0.909, cost=0.262, regret=0.240
+- mean_ensemble_policy: success=0.472 +/- 0.011, unsafe=0.006, type_acc=0.014, recall=0.069, noise_false_alarm=0.025, cost=0.030, regret=0.169
+- conformal_risk_filter: success=0.266 +/- 0.010, unsafe=0.000, type_acc=0.190, recall=0.761, noise_false_alarm=0.524, cost=0.186, regret=0.460
+- variance_threshold_abstention: success=0.155 +/- 0.007, unsafe=0.001, type_acc=0.119, recall=0.948, noise_false_alarm=0.757, cost=0.201, regret=0.585
+
+Gate outcomes:
+- success_gate: False
+- unsafe_gate: False
+- recall_gate: True
+- false_alarm_gate: True
+- ablation_gate: False
+
+Terminal rationale:
+- proposed does not beat strongest success baseline failure_aware_rl_recovery (0.637 vs 0.701)
+- proposed does not beat safest baseline conformal_risk_filter (0.000 vs 0.000)
+- ablations match or beat full on success/regret: minus_probe_action, minus_protocol_cost_model, recovery_only_protocol
+
+Ablation summary:
+- recovery_only_protocol: success=0.645, unsafe=0.000, regret=0.079, type_acc=0.493
+- minus_protocol_cost_model: success=0.642, unsafe=0.000, regret=0.097, type_acc=0.491
+- minus_probe_action: success=0.635, unsafe=0.000, regret=0.103, type_acc=0.501
+- full_disagreement_protocol: success=0.631, unsafe=0.000, regret=0.116, type_acc=0.493
+- minus_calibration: success=0.598, unsafe=0.000, regret=0.154, type_acc=0.491
+- minus_disagreement_type_classifier: success=0.572, unsafe=0.001, regret=0.117, type_acc=0.265
+- variance_only_protocol: success=0.148, unsafe=0.000, regret=0.596, type_acc=0.497
+
+Representative failure cases:
+- bimanual_manipulation_failure_detection / sensor_corruption seed 0: success=0.5, regret=0.25916905112120453; diagnostic action cost exceeds the value of the additional disagreement label
+- contact_rich_pick_and_place / sensor_corruption seed 6: success=0.5340909090909091, regret=0.25713072796290143; diagnostic action cost exceeds the value of the additional disagreement label
+- contact_rich_pick_and_place / epistemic_unknown seed 1: success=0.5681818181818182, regret=0.2557587471847947; diagnostic action cost exceeds the value of the additional disagreement label
+- bimanual_manipulation_failure_detection / epistemic_unknown seed 5: success=0.48863636363636365, regret=0.2538227500871361; diagnostic action cost exceeds the value of the additional disagreement label
+- legged_locomotion_disturbance / epistemic_unknown seed 6: success=0.48863636363636365, regret=0.25196385497098633; diagnostic action cost exceeds the value of the additional disagreement label
+
+Paired comparison rows: 35
+No hardware validation is claimed; this is a local executable surrogate audit.

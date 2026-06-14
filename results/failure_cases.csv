@@ -1,0 +1,13 @@
+case_id,task,family,seed,task_success,unsafe_commit_rate,noise_false_alarm_rate,planning_regret_to_oracle,failure_mode
+1,bimanual_manipulation_failure_detection,sensor_corruption,0,0.500000,0.000000,0.000000,0.259169,diagnostic action cost exceeds the value of the additional disagreement label
+2,contact_rich_pick_and_place,sensor_corruption,6,0.534091,0.000000,0.000000,0.257131,diagnostic action cost exceeds the value of the additional disagreement label
+3,contact_rich_pick_and_place,epistemic_unknown,1,0.568182,0.000000,0.000000,0.255759,diagnostic action cost exceeds the value of the additional disagreement label
+4,bimanual_manipulation_failure_detection,epistemic_unknown,5,0.488636,0.000000,0.000000,0.253823,diagnostic action cost exceeds the value of the additional disagreement label
+5,legged_locomotion_disturbance,epistemic_unknown,6,0.488636,0.000000,0.000000,0.251964,diagnostic action cost exceeds the value of the additional disagreement label
+6,contact_rich_pick_and_place,epistemic_unknown,6,0.522727,0.000000,0.000000,0.251491,diagnostic action cost exceeds the value of the additional disagreement label
+7,legged_locomotion_disturbance,epistemic_unknown,0,0.545455,0.000000,0.000000,0.250460,diagnostic action cost exceeds the value of the additional disagreement label
+8,legged_locomotion_disturbance,epistemic_unknown,2,0.431818,0.000000,0.000000,0.249729,diagnostic action cost exceeds the value of the additional disagreement label
+9,bimanual_manipulation_failure_detection,sensor_corruption,6,0.522727,0.000000,0.000000,0.247166,diagnostic action cost exceeds the value of the additional disagreement label
+10,legged_locomotion_disturbance,epistemic_unknown,5,0.522727,0.000000,0.000000,0.246876,diagnostic action cost exceeds the value of the additional disagreement label
+11,legged_locomotion_disturbance,sensor_corruption,5,0.579545,0.000000,0.000000,0.246103,diagnostic action cost exceeds the value of the additional disagreement label
+12,bimanual_manipulation_failure_detection,epistemic_unknown,3,0.488636,0.000000,0.000000,0.244160,diagnostic action cost exceeds the value of the additional disagreement label

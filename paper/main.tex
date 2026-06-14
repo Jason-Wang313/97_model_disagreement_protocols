@@ -4,42 +4,86 @@
 \usepackage{hyperref}
 \usepackage{url}
 \usepackage{booktabs}
-\title{Model Disagreement Protocols: ICLR Main-Conference Gate Archive}
+\usepackage{graphicx}
+\title{Model Disagreement Protocols: A Negative ICLR-Main Evidence Audit}
 \author{Anonymous Authors}
+
 \begin{document}
 \maketitle
+
 \begin{abstract}
-This document is not an ICLR main-conference submission. It is the v3 main-conference gate for a generated robotics draft about ensembles and world models for robots. The original research bet was: Define action protocols that distinguish useful model disagreement from noise. After a stricter hostile review, the honest terminal decision is \textbf{KILL/ARCHIVE}. Submission-hardening version: v3.
+This archive tests whether model disagreement becomes useful for robotics when it is classified into action protocols: commit, probe, switch controller, abstain, or recover. We rebuilt the original draft into a paper-specific executable audit with five robot task families, seven disagreement families, five stress splits, nine methods, seven seeds, ablations, calibration and safety metrics, pairwise comparisons, failure cases, and stress sweeps. The result is negative. The proposed protocol improves useful-disagreement recall, but it does not beat failure-aware recovery on combined-stress task success (0.637 versus 0.701), does not improve over the safest baselines on unsafe commits, and is undermined by ablations that remove probing or the protocol cost model. The terminal decision is \texttt{KILL\_ARCHIVE}, not ICLR-main submission.
 \end{abstract}
 
-\section{Gate Decision}
-The v2 paper was workshop-only. Under the active ICLR-main standard, that is insufficient. The local artifacts contain synthetic multi-seed diagnostics, but no real-robot validation, high-fidelity simulator benchmark, trained world-action model, implemented real baselines, or manual full-paper related-work synthesis. These missing items are not recoverable by editing text or rerunning the synthetic script.
+\section{Question}
+The seed idea was that robot world-model disagreement should not be treated as one scalar uncertainty signal. Instead, a robot should infer whether disagreement is epistemic uncertainty, aleatoric sensor noise, model misspecification, out-of-distribution action, harmless multimodality, sensor corruption, or controller instability, then choose an action protocol. This is a plausible idea, but it sits in crowded territory: robust control, conformal risk filtering, diagnostic probing, embodied world models, and failure-aware recovery already address many of the same deployment failures \citep{prior1,prior3,prior6}.
 
-\section{Fatal ICLR-Main Blockers}
-\begin{itemize}
-\item Evidence is synthetic and generated from a shared batch template.
-\item Baselines are diagnostic probability models, not implemented competing robot systems.
-\item Ablations do not correspond to a trained model checkpoint.
-\item No hardware, high-fidelity benchmark, qualitative rollouts, or failure videos are available.
-\item Related work is based on pool slices and hostile metadata, not a manual full-paper synthesis.
-\item Claims would be misleading if framed as ICLR-main empirical robotics evidence.
-\end{itemize}
+\section{Audit Design}
+We built a deterministic local benchmark rather than reusing the previous generic scaffold. Each seed/task/family group samples latent risk, disagreement features, calibration noise, and protocol costs. Methods choose among commit, probe, switch controller, abstain, and recover. The evaluated methods are mean ensemble policy, variance-threshold abstention, conformal risk filter, robust MPC fallback, failure-aware RL recovery, WorldBench-style diagnostic probing, ensemble forecasting calibration, the proposed disagreement protocol, and an action oracle.
 
-\section{Hostile Prior-Work Pressure}
-The closest local hostile records include:
-\begin{itemize}
-\item ManipArena: Comprehensive Real-world Evaluation of Reasoning-Oriented Generalist Robot Manipulation (2026)
-\item Benchmarking Robust Machine Learning Models Under Data Imperfections in Real-World Data Science Scenarios (2026)
-\item Failure-Aware RL: Reliable Offline-to-Online Reinforcement Learning with Self-Recovery for Real-World Manipulation (2026)
-\item Evaluating Large Language Model Ensembles as Probabilistic Forecasters: An Empirical Study on Live Real-World Events (n.d.)
-\item Agile science: creating useful products for behavior change in the real world (2016)
-\end{itemize}
-These works make generic world models, uncertainty, model-based planning, and robot policy robustness crowded. Without real empirical evidence, the remaining novelty boundary is too weak for ICLR main.
+The benchmark covers five task families: bimanual manipulation failure detection, contact-rich pick-and-place, deformable object handling, mobile navigation under sensor noise, and legged locomotion disturbance. The hardest split is \texttt{combined\_disagreement\_stress}. Metrics include disagreement-family accuracy, useful-disagreement recall, noise false-alarm rate, calibration error, probe informativeness, task success, unsafe commit rate, unnecessary intervention, recovery success, protocol cost, and regret to an action oracle.
 
-\section{What Remains Useful}
-The archive is still useful as an idea seed and reproducibility scaffold. The synthetic code, stress-test CSVs, reviewer attacks, and novelty-boundary docs can inform a future project. The correct next step is not more paper polishing; it is new evidence: implemented models, real baselines, manual related work, and robot or high-fidelity simulator validation.
+\section{Combined-Stress Results}
+Table~\ref{tab:combined} is the submission-critical result. The proposed protocol is not the best non-oracle method on task success. Failure-aware recovery is stronger on the main closed-loop objective and regret, even though it has much lower disagreement-family accuracy.
 
-\section{Terminal Action}
-Decision: \textbf{KILL/ARCHIVE for ICLR main}. Do not submit this paper to ICLR main in the current form. Revival requires a substantially new empirical project.
+\begin{table}[t]
+\caption{Combined-stress metrics. Higher is better for success, type accuracy, and recall; lower is better for unsafe commits, false alarms, and regret.}
+\label{tab:combined}
+\centering
+\resizebox{\textwidth}{!}{\input{../results/combined_stress_table.tex}}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.95\textwidth]{../figures/disagreement_task_outcomes.png}
+\caption{Closed-loop outcomes under combined stress. The proposed protocol is safer than naive mean control but does not beat failure-aware recovery or robust fallback on the main task-success objective.}
+\label{fig:outcomes}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.95\textwidth]{../figures/disagreement_classification_quality.png}
+\caption{The proposed method improves useful-disagreement recall, but that diagnostic advantage does not convert into the best closed-loop performance.}
+\label{fig:diagnostics}
+\end{figure}
+
+\section{Ablations}
+The ablation study is fatal for the mechanism. Removing the probe action, removing the protocol cost model, or using a recovery-only protocol matches or beats the full method on success or regret. This means the evidence does not isolate a positive contribution from the proposed type-to-protocol mechanism.
+
+\begin{table}[t]
+\caption{Combined-stress ablations. The full protocol is not uniquely supported.}
+\label{tab:ablations}
+\centering
+\resizebox{\textwidth}{!}{\input{../results/ablation_table.tex}}
+\end{table}
+
+\section{Pairwise Gate}
+The strongest gate was defined before the run: the proposed method had to beat the strongest non-oracle success baseline and the safest baseline, while surviving ablations. Table~\ref{tab:pairwise} shows why it fails. Against failure-aware recovery, proposed minus baseline task success is negative. Against robust fallback, regret is worse. Against conformal filtering, unsafe commits are a statistical tie rather than a win.
+
+\begin{table}[t]
+\caption{Paired seed/task/family comparisons used for the terminal decision.}
+\label{tab:pairwise}
+\centering
+\resizebox{\textwidth}{!}{\input{../results/pairwise_decision_table.tex}}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.88\textwidth]{../figures/disagreement_stress_sweep.png}
+\caption{Stress sweep. Simpler recovery/fallback strategies remain competitive as combined stress increases.}
+\label{fig:sweep}
+\end{figure}
+
+\section{Failure Cases}
+The most common failure pattern is not catastrophic unsafe commitment. It is unnecessary or expensive intervention. In epistemic and sensor-corruption cases, the protocol often pays for diagnostic action but does not gain enough task success to offset the cost. This is precisely the kind of negative evidence that should stop an ICLR-main claim: the mechanism is plausible, measurable, and still not superior to simpler recovery.
+
+\section{Limitations}
+This audit is local and executable, not real hardware evidence. It does not include a trained robot policy, high-fidelity simulator, physical robot rollouts, or external benchmark comparison. Those limitations would prevent main-track readiness even if the local result were positive. Since the local result is negative, the correct action is archive, not more polish.
+
+\section{Terminal Decision}
+The terminal decision is \texttt{KILL\_ARCHIVE}. The paper should not be submitted to ICLR main. A revival would require a new empirical project showing that the full type-to-protocol mechanism beats robust fallback and failure-aware recovery on real or high-fidelity robot tasks.
+
+\bibliographystyle{iclr2026_conference}
+\bibliography{references}
 
 \end{document}
