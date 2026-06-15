@@ -1,10 +1,10 @@
 # Final Audit
 
 1. Paper: 97 `model_disagreement_protocols`.
-2. Submission-hardening version: v4.
-3. Last audit timestamp: 2026-06-14 21:24:22 +01:00.
+2. Submission-hardening version: v4.1 rerun audit.
+3. Last audit timestamp: 2026-06-15 14:08:45 +01:00.
 4. Thesis tested: classify model disagreement and select a robot action protocol.
-5. Evidence produced: 5 tasks x 7 disagreement families x 5 splits x 9 methods, seven seeds, ablations, stress sweep, pairwise tests, and failure cases.
+5. Evidence produced: 5 tasks x 7 disagreement families x 5 splits x 9 methods, seven seeds, ablations, stress sweep, pairwise tests, and failure cases; rerun on 2026-06-15 without reducing experimental quality.
 6. Terminal decision: KILL_ARCHIVE.
 7. Main empirical reason: `failure_aware_rl_recovery` beats the proposed protocol on combined-stress task success, 0.701 vs 0.637, and has lower regret, 0.051 vs 0.111.
 8. Ablation reason: `minus_probe_action`, `minus_protocol_cost_model`, and `recovery_only_protocol` match or beat full on success/regret.

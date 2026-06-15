@@ -24,3 +24,10 @@
 - Added task/family/split structure, calibration, safety, regret, ablations, pairwise comparisons, stress sweep, figures, and LaTeX result tables.
 - Evidence outcome: proposed protocol loses to `failure_aware_rl_recovery` on combined-stress success, 0.637 vs 0.701, and ablations match or beat full on success/regret.
 - Terminal decision: KILL_ARCHIVE.
+
+## v4.1 - Continuation Rerun Audit
+
+- Added `docs/paper97_iclr_submission_execution_plan_20260615.md` before rerunning.
+- Recompiled and reran the full benchmark without reducing experimental quality.
+- Audited regenerated CSV row counts, coverage, paired statistics, ablations, maximum-stress results, and failure cases.
+- Reconfirmed KILL_ARCHIVE: the proposed taxonomy improves diagnostics but loses success/regret to failure-aware recovery and is undercut by simpler ablations.

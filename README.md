@@ -1,10 +1,10 @@
 # 97 Model Disagreement Protocols
 
-Submission-hardening version: v4
+Submission-hardening version: v4.1 rerun audit
 
 Terminal decision: KILL_ARCHIVE for ICLR main.
 
-This repository is the v4 evidence audit for the claim that robot model disagreement becomes useful when classified into an action protocol: commit, probe, switch controller, abstain, or recover. The audit is paper-specific and executable, but it does not support a main-track submission.
+This repository is the v4/v4.1 evidence audit for the claim that robot model disagreement becomes useful when classified into an action protocol: commit, probe, switch controller, abstain, or recover. The audit is paper-specific and executable, but it does not support a main-track submission.
 
 ## Evidence Summary
 
@@ -17,7 +17,7 @@ The runner builds a deterministic disagreement-to-action benchmark with:
 - 7 seeds and 88 episodes per seed/task/family/method group.
 - Ablations, pairwise tests, failure cases, and stress sweeps.
 
-The proposed protocol improves useful-disagreement recall, but it does not clear the submission gate. On combined stress, failure-aware RL recovery reaches higher task success than the proposed protocol, and stripped variants match or beat the full method on success or regret. The honest terminal state is therefore `KILL_ARCHIVE`.
+The proposed protocol improves useful-disagreement recall, but it does not clear the submission gate. On combined stress, failure-aware RL recovery reaches higher task success than the proposed protocol, and stripped variants match or beat the full method on success or regret. The 2026-06-15 continuation rerun reproduced this terminal result. The honest terminal state is therefore `KILL_ARCHIVE`.
 
 ## Reproduce
 

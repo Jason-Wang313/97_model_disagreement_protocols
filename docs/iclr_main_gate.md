@@ -2,7 +2,7 @@
 
 Paper: 97 `model_disagreement_protocols`
 
-Version: v4
+Version: v4.1 rerun audit
 
 Gate verdict: KILL_ARCHIVE
 
@@ -18,6 +18,8 @@ The proposed disagreement protocol had to beat the strongest non-oracle baseline
 - Proposed protocol regret: 0.111.
 - Failure-aware recovery regret: 0.051.
 - Ablations matching or beating full: `minus_probe_action`, `minus_protocol_cost_model`, `recovery_only_protocol`.
+
+Continuation audit: the 2026-06-15 rerun regenerated the full benchmark artifacts and reproduced the same KILL_ARCHIVE decision.
 
 ## Verdict
 

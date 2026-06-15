@@ -14,7 +14,7 @@ Paper: 97 Model Disagreement Protocols
 
 ## Hostile Review
 
-A hostile reviewer would not reject only because the benchmark is local. They would reject because the local benchmark itself fails to validate the claimed mechanism. The proposed protocol reaches good useful-disagreement recall, but failure-aware recovery has higher combined-stress task success and lower regret, and stripped variants match or beat the full method on success/regret.
+A hostile reviewer would not reject only because the benchmark is local. They would reject because the local benchmark itself fails to validate the claimed mechanism. The 2026-06-15 rerun reproduces the same result: the proposed protocol reaches good useful-disagreement recall, but failure-aware recovery has higher combined-stress task success and lower regret, and stripped variants match or beat the full method on success/regret.
 
 ## Honest Response
 

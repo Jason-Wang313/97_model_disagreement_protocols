@@ -2,7 +2,7 @@
 
 Paper: 97 `model_disagreement_protocols`
 
-Version: v4
+Version: v4.1 rerun audit
 
 ## Attack 1: This is just uncertainty thresholding.
 
@@ -35,3 +35,7 @@ Result: Still true. This prevents main-conference readiness even if the local re
 ## Terminal Action
 
 Mark `KILL_ARCHIVE`. Do not submit as an ICLR-main paper.
+
+## Continuation Rerun Check
+
+Result: unchanged. The 2026-06-15 rerun again finds that the proposed protocol loses combined-stress success to `failure_aware_rl_recovery` (`0.63692` vs `0.70093`), loses regret (`0.11064` vs `0.05130`), and is undercut by `minus_probe_action`, `minus_protocol_cost_model`, and `recovery_only_protocol`.

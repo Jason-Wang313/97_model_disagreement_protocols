@@ -2,6 +2,7 @@
 
 ## Reproduces Locally
 
+- [x] `python -m py_compile src/run_experiment.py`
 - [x] `python src/run_experiment.py`
 - [x] `results/summary.txt`
 - [x] `results/metrics.csv`

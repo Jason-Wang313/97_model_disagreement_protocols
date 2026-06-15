@@ -5,6 +5,8 @@
 \usepackage{url}
 \usepackage{booktabs}
 \usepackage{graphicx}
+\usepackage{microtype}
+\raggedbottom
 \title{Model Disagreement Protocols: A Negative ICLR-Main Evidence Audit}
 \author{Anonymous Authors}
 
@@ -12,14 +14,14 @@
 \maketitle
 
 \begin{abstract}
-This archive tests whether model disagreement becomes useful for robotics when it is classified into action protocols: commit, probe, switch controller, abstain, or recover. We rebuilt the original draft into a paper-specific executable audit with five robot task families, seven disagreement families, five stress splits, nine methods, seven seeds, ablations, calibration and safety metrics, pairwise comparisons, failure cases, and stress sweeps. The result is negative. The proposed protocol improves useful-disagreement recall, but it does not beat failure-aware recovery on combined-stress task success (0.637 versus 0.701), does not improve over the safest baselines on unsafe commits, and is undermined by ablations that remove probing or the protocol cost model. The terminal decision is \texttt{KILL\_ARCHIVE}, not ICLR-main submission.
+This archive tests whether model disagreement becomes useful for robotics when it is classified into action protocols: commit, probe, switch controller, abstain, or recover. We rebuilt the original draft into a paper-specific executable audit with five robot task families, seven disagreement families, five stress splits, nine methods, seven seeds, ablations, calibration and safety metrics, pairwise comparisons, failure cases, and stress sweeps. A 2026-06-15 continuation rerun reproduced the negative result. The proposed protocol improves useful-disagreement recall, but it does not beat failure-aware recovery on combined-stress task success (0.637 versus 0.701), does not improve over the safest baselines on unsafe commits, and is undermined by ablations that remove probing or the protocol cost model. The terminal decision is \texttt{KILL\_ARCHIVE}, not ICLR-main submission.
 \end{abstract}
 
 \section{Question}
 The seed idea was that robot world-model disagreement should not be treated as one scalar uncertainty signal. Instead, a robot should infer whether disagreement is epistemic uncertainty, aleatoric sensor noise, model misspecification, out-of-distribution action, harmless multimodality, sensor corruption, or controller instability, then choose an action protocol. This is a plausible idea, but it sits in crowded territory: robust control, conformal risk filtering, diagnostic probing, embodied world models, and failure-aware recovery already address many of the same deployment failures \citep{prior1,prior3,prior6}.
 
 \section{Audit Design}
-We built a deterministic local benchmark rather than reusing the previous generic scaffold. Each seed/task/family group samples latent risk, disagreement features, calibration noise, and protocol costs. Methods choose among commit, probe, switch controller, abstain, and recover. The evaluated methods are mean ensemble policy, variance-threshold abstention, conformal risk filter, robust MPC fallback, failure-aware RL recovery, WorldBench-style diagnostic probing, ensemble forecasting calibration, the proposed disagreement protocol, and an action oracle.
+We built and reran a deterministic local benchmark rather than reusing the previous generic scaffold. Each seed/task/family group samples latent risk, disagreement features, calibration noise, and protocol costs. Methods choose among commit, probe, switch controller, abstain, and recover. The evaluated methods are mean ensemble policy, variance-threshold abstention, conformal risk filter, robust MPC fallback, failure-aware RL recovery, WorldBench-style diagnostic probing, ensemble forecasting calibration, the proposed disagreement protocol, and an action oracle.
 
 The benchmark covers five task families: bimanual manipulation failure detection, contact-rich pick-and-place, deformable object handling, mobile navigation under sensor noise, and legged locomotion disturbance. The hardest split is \texttt{combined\_disagreement\_stress}. Metrics include disagreement-family accuracy, useful-disagreement recall, noise false-alarm rate, calibration error, probe informativeness, task success, unsafe commit rate, unnecessary intervention, recovery success, protocol cost, and regret to an action oracle.
 
@@ -81,9 +83,12 @@ The most common failure pattern is not catastrophic unsafe commitment. It is unn
 This audit is local and executable, not real hardware evidence. It does not include a trained robot policy, high-fidelity simulator, physical robot rollouts, or external benchmark comparison. Those limitations would prevent main-track readiness even if the local result were positive. Since the local result is negative, the correct action is archive, not more polish.
 
 \section{Terminal Decision}
-The terminal decision is \texttt{KILL\_ARCHIVE}. The paper should not be submitted to ICLR main. A revival would require a new empirical project showing that the full type-to-protocol mechanism beats robust fallback and failure-aware recovery on real or high-fidelity robot tasks.
+The terminal decision is \texttt{KILL\_ARCHIVE}. The paper should not be submitted to ICLR main. The rebuilt and rerun evidence shows that the type-to-protocol diagnostics are real but not closed-loop superior. A revival would require a new empirical project showing that the full type-to-protocol mechanism beats robust fallback and failure-aware recovery on real or high-fidelity robot tasks.
 
+\begingroup
+\raggedright
 \bibliographystyle{iclr2026_conference}
 \bibliography{references}
+\endgroup
 
 \end{document}
