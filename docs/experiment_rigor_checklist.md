@@ -14,6 +14,14 @@
 - [x] Generated figures and LaTeX result tables.
 - [x] Explicit terminal gate in `results/summary.txt`.
 
+## v4.1 Continuation Completed
+
+- [x] Paper-specific continuation execution plan before rerun.
+- [x] `python -m py_compile src/run_experiment.py`.
+- [x] Full rerun without reducing seeds, episodes, task families, disagreement families, methods, ablations, or stress levels.
+- [x] CSV integrity audit over row counts and coverage.
+- [x] Confirmation that the rerun keeps the terminal decision at KILL_ARCHIVE.
+
 ## ICLR Main Bar Not Met
 
 - [ ] Real robot validation.

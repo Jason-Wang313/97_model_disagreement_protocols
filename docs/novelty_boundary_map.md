@@ -14,7 +14,7 @@
 
 The only potentially novel boundary was a type-to-protocol mechanism: classify the disagreement family and choose commit, probe, switch controller, abstain, or recover.
 
-## What The v4 Audit Found
+## What The v4/v4.1 Audit Found
 
 The boundary is not strong enough. The proposed protocol improves recall but does not beat simpler recovery/fallback baselines on the closed-loop metrics that matter for a robot. The failure cases indicate that the label taxonomy adds intervention cost, especially for epistemic and sensor-corruption cases, without enough success gain.
 

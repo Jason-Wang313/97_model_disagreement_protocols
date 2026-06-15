@@ -6,7 +6,7 @@ ICLR main-conference readiness: NO.
 
 ## Evidence
 
-The v4 rebuild replaced the generic scaffold with an executable disagreement-to-action audit. The audit includes strong baselines, ablations, stress tests, uncertainty/calibration metrics, pairwise seed/task/family comparisons, and failure cases.
+The v4/v4.1 rebuild replaced the generic scaffold with an executable disagreement-to-action audit. The audit includes strong baselines, ablations, stress tests, uncertainty/calibration metrics, pairwise seed/task/family comparisons, and failure cases. The 2026-06-15 continuation rerun reproduced the same decision.
 
 Combined-stress headline:
 
