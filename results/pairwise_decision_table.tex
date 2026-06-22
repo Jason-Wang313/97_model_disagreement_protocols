@@ -1,12 +1,22 @@
 \begin{tabular}{lllllll}
 \toprule
-Baseline & Metric & Proposed & Baseline & Diff & CI95 & Winner \\
+Baseline & Metric & V5 & Baseline & Diff & CI95 & Winner \\
 \midrule
-conformal\_risk\_filter & task\_success & 0.6369202226345083 & 0.26563079777365495 & 0.3712894248608534 & 0.016048241779676068 & proposed\_disagreement\_protocol \\
-conformal\_risk\_filter & unsafe\_commit\_rate & 9.276437847866419e-05 & 4.6382189239332094e-05 & 4.6382189239332094e-05 & 0.00015767412574101686 & statistical\_tie \\
-conformal\_risk\_filter & planning\_regret\_to\_oracle & 0.11064359187304103 & 0.4602584613061416 & -0.3496148694331006 & 0.01244766897736767 & proposed\_disagreement\_protocol \\
-failure\_aware\_rl\_recovery & task\_success & 0.6369202226345083 & 0.7009276437847864 & -0.0640074211502783 & 0.01053437737244677 & failure\_aware\_rl\_recovery \\
-failure\_aware\_rl\_recovery & unsafe\_commit\_rate & 9.276437847866419e-05 & 4.6382189239332094e-05 & 4.6382189239332094e-05 & 0.00015767412574101684 & statistical\_tie \\
-failure\_aware\_rl\_recovery & planning\_regret\_to\_oracle & 0.11064359187304103 & 0.05130249176053177 & 0.05934110011250925 & 0.0036534140015283705 & failure\_aware\_rl\_recovery \\
+failure\_aware\_rl\_recovery & task\_success & 0.596 & 0.684 & -0.088 & 0.002 & failure\_aware\_rl\_recovery \\
+failure\_aware\_rl\_recovery & unsafe\_commit\_rate & 0.117 & 0.084 & 0.034 & 0.001 & failure\_aware\_rl\_recovery \\
+failure\_aware\_rl\_recovery & planning\_regret\_to\_oracle & 0.283 & 0.137 & 0.147 & 0.004 & failure\_aware\_rl\_recovery \\
+failure\_aware\_rl\_recovery & disagreement\_family\_accuracy & 0.536 & 0.230 & 0.306 & 0.012 & risk\_bounded\_typed\_disagreement\_protocol\_v5 \\
+failure\_aware\_rl\_recovery & useful\_disagreement\_recall & 0.494 & 0.127 & 0.367 & 0.006 & risk\_bounded\_typed\_disagreement\_protocol\_v5 \\
+failure\_aware\_rl\_recovery & noise\_false\_alarm\_rate & 0.008 & 0.083 & -0.075 & 0.004 & risk\_bounded\_typed\_disagreement\_protocol\_v5 \\
+failure\_aware\_rl\_recovery & robust\_utility & 0.202 & 0.362 & -0.160 & 0.004 & failure\_aware\_rl\_recovery \\
+failure\_aware\_rl\_recovery & deployment\_coverage & 0.999 & 1.000 & -0.001 & 0.000 & failure\_aware\_rl\_recovery \\
+recovery\_first\_policy & task\_success & 0.596 & 0.689 & -0.092 & 0.003 & recovery\_first\_policy \\
+recovery\_first\_policy & unsafe\_commit\_rate & 0.117 & 0.079 & 0.038 & 0.002 & recovery\_first\_policy \\
+recovery\_first\_policy & planning\_regret\_to\_oracle & 0.283 & 0.139 & 0.145 & 0.004 & recovery\_first\_policy \\
+recovery\_first\_policy & disagreement\_family\_accuracy & 0.536 & 0.185 & 0.351 & 0.013 & risk\_bounded\_typed\_disagreement\_protocol\_v5 \\
+recovery\_first\_policy & useful\_disagreement\_recall & 0.494 & 0.116 & 0.378 & 0.004 & risk\_bounded\_typed\_disagreement\_protocol\_v5 \\
+recovery\_first\_policy & noise\_false\_alarm\_rate & 0.008 & 0.106 & -0.098 & 0.003 & risk\_bounded\_typed\_disagreement\_protocol\_v5 \\
+recovery\_first\_policy & robust\_utility & 0.202 & 0.371 & -0.169 & 0.005 & recovery\_first\_policy \\
+recovery\_first\_policy & deployment\_coverage & 0.999 & 0.955 & 0.045 & 0.004 & risk\_bounded\_typed\_disagreement\_protocol\_v5 \\
 \bottomrule
 \end{tabular}

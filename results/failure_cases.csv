@@ -1,13 +1,25 @@
-case_id,task,family,seed,task_success,unsafe_commit_rate,noise_false_alarm_rate,planning_regret_to_oracle,failure_mode
-1,bimanual_manipulation_failure_detection,sensor_corruption,0,0.500000,0.000000,0.000000,0.259169,diagnostic action cost exceeds the value of the additional disagreement label
-2,contact_rich_pick_and_place,sensor_corruption,6,0.534091,0.000000,0.000000,0.257131,diagnostic action cost exceeds the value of the additional disagreement label
-3,contact_rich_pick_and_place,epistemic_unknown,1,0.568182,0.000000,0.000000,0.255759,diagnostic action cost exceeds the value of the additional disagreement label
-4,bimanual_manipulation_failure_detection,epistemic_unknown,5,0.488636,0.000000,0.000000,0.253823,diagnostic action cost exceeds the value of the additional disagreement label
-5,legged_locomotion_disturbance,epistemic_unknown,6,0.488636,0.000000,0.000000,0.251964,diagnostic action cost exceeds the value of the additional disagreement label
-6,contact_rich_pick_and_place,epistemic_unknown,6,0.522727,0.000000,0.000000,0.251491,diagnostic action cost exceeds the value of the additional disagreement label
-7,legged_locomotion_disturbance,epistemic_unknown,0,0.545455,0.000000,0.000000,0.250460,diagnostic action cost exceeds the value of the additional disagreement label
-8,legged_locomotion_disturbance,epistemic_unknown,2,0.431818,0.000000,0.000000,0.249729,diagnostic action cost exceeds the value of the additional disagreement label
-9,bimanual_manipulation_failure_detection,sensor_corruption,6,0.522727,0.000000,0.000000,0.247166,diagnostic action cost exceeds the value of the additional disagreement label
-10,legged_locomotion_disturbance,epistemic_unknown,5,0.522727,0.000000,0.000000,0.246876,diagnostic action cost exceeds the value of the additional disagreement label
-11,legged_locomotion_disturbance,sensor_corruption,5,0.579545,0.000000,0.000000,0.246103,diagnostic action cost exceeds the value of the additional disagreement label
-12,bimanual_manipulation_failure_detection,epistemic_unknown,3,0.488636,0.000000,0.000000,0.244160,diagnostic action cost exceeds the value of the additional disagreement label
+case_id,split,task,family,seed,task_success,unsafe_commit_rate,noise_false_alarm_rate,planning_regret_to_oracle,failure_mode
+1,model_misspecification_shift,legged_locomotion_disturbance,model_misspecification,8,0.443411,0.260638,0.000000,0.727165,robust fallback captures much of the value without classification
+2,controller_instability_shift,articulated_tool_use_with_occlusion,controller_instability,0,0.499437,0.261383,0.000000,0.710683,direct recovery competes with taxonomy overhead
+3,controller_instability_shift,articulated_tool_use_with_occlusion,controller_instability,7,0.507157,0.255306,0.000000,0.703131,direct recovery competes with taxonomy overhead
+4,model_misspecification_shift,bimanual_manipulation_failure_detection,model_misspecification,0,0.462662,0.249711,0.000000,0.691037,robust fallback captures much of the value without classification
+5,model_misspecification_shift,bimanual_manipulation_failure_detection,controller_instability,1,0.520621,0.248246,0.000000,0.684837,direct recovery competes with taxonomy overhead
+6,model_misspecification_shift,contact_rich_pick_and_place,controller_instability,4,0.523886,0.244045,0.000000,0.673422,direct recovery competes with taxonomy overhead
+7,model_misspecification_shift,articulated_tool_use_with_occlusion,controller_instability,3,0.525200,0.242947,0.000000,0.672114,direct recovery competes with taxonomy overhead
+8,model_misspecification_shift,contact_rich_pick_and_place,out_of_distribution_action,6,0.486818,0.249588,0.000000,0.668911,robust fallback captures much of the value without classification
+9,model_misspecification_shift,legged_locomotion_disturbance,controller_instability,8,0.531756,0.250995,0.000000,0.665805,direct recovery competes with taxonomy overhead
+10,model_misspecification_shift,bimanual_manipulation_failure_detection,controller_instability,8,0.530839,0.241499,0.000000,0.660410,direct recovery competes with taxonomy overhead
+11,rare_adversarial_shift,bimanual_manipulation_failure_detection,sensor_corruption,6,0.423512,0.237870,0.000000,0.656778,diagnostic action cost exceeds the realized value of the label
+12,model_misspecification_shift,legged_locomotion_disturbance,controller_instability,6,0.543469,0.241596,0.000000,0.656097,direct recovery competes with taxonomy overhead
+13,model_misspecification_shift,articulated_tool_use_with_occlusion,controller_instability,9,0.529893,0.240450,0.000000,0.654890,direct recovery competes with taxonomy overhead
+14,model_misspecification_shift,legged_locomotion_disturbance,model_misspecification,3,0.484404,0.238646,0.000000,0.642916,robust fallback captures much of the value without classification
+15,controller_instability_shift,legged_locomotion_disturbance,controller_instability,8,0.547275,0.239146,0.000000,0.637370,direct recovery competes with taxonomy overhead
+16,model_misspecification_shift,bimanual_manipulation_failure_detection,controller_instability,5,0.553533,0.232610,0.000000,0.629109,direct recovery competes with taxonomy overhead
+17,model_misspecification_shift,contact_rich_pick_and_place,out_of_distribution_action,4,0.505951,0.240277,0.000000,0.627618,robust fallback captures much of the value without classification
+18,controller_instability_shift,mobile_navigation_under_sensor_noise,out_of_distribution_action,5,0.505979,0.235417,0.000000,0.624554,robust fallback captures much of the value without classification
+19,model_misspecification_shift,legged_locomotion_disturbance,controller_instability,1,0.549797,0.239046,0.000000,0.623873,direct recovery competes with taxonomy overhead
+20,controller_instability_shift,bimanual_manipulation_failure_detection,goal_specification_ambiguity,3,0.437806,0.220175,0.000000,0.619315,goal ambiguity benefits from probing only when label value exceeds cost
+21,combined_disagreement_stress,deformable_object_handling,controller_instability,5,0.535259,0.238919,0.000000,0.614084,direct recovery competes with taxonomy overhead
+22,rare_adversarial_shift,deformable_object_handling,controller_instability,2,0.530078,0.240849,0.000000,0.612510,direct recovery competes with taxonomy overhead
+23,combined_disagreement_stress,articulated_tool_use_with_occlusion,controller_instability,1,0.542022,0.237385,0.000000,0.608404,direct recovery competes with taxonomy overhead
+24,controller_instability_shift,legged_locomotion_disturbance,controller_instability,2,0.562955,0.228423,0.000000,0.604537,direct recovery competes with taxonomy overhead

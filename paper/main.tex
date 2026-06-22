@@ -1,94 +1,306 @@
-\documentclass{article}
-\usepackage{iclr2026_conference,times}
-\input{math_commands.tex}
-\usepackage{hyperref}
-\usepackage{url}
-\usepackage{booktabs}
-\usepackage{graphicx}
-\usepackage{microtype}
-\raggedbottom
-\title{Model Disagreement Protocols: A Negative ICLR-Main Evidence Audit}
-\author{Anonymous Authors}
 
+\documentclass[11pt]{article}
+\usepackage[letterpaper,margin=0.95in]{geometry}
+\usepackage{amsmath,amssymb,booktabs,longtable,array,graphicx,float,caption,xcolor}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage[colorlinks=false,citebordercolor={0 1 0},linkbordercolor={1 0.55 0},urlbordercolor={0 0.55 1},pdfborder={0 0 1.2}]{hyperref}
+\graphicspath{{../figures/}}
+\setlength{\parskip}{0.42em}
+\setlength{\parindent}{0pt}
+\newcommand{\method}[1]{\texttt{#1}}
+\newcommand{\decisionbox}[1]{\textbf{#1}}
+\title{When Typed Model Disagreement Hurts Robot Control: A Frozen Negative Audit of Risk-Bounded Disagreement Protocols}
+\author{Paper 97 Submission-Hardening Audit}
+\date{Frozen evidence package: 2026-06-22}
 \begin{document}
 \maketitle
 
 \begin{abstract}
-This archive tests whether model disagreement becomes useful for robotics when it is classified into action protocols: commit, probe, switch controller, abstain, or recover. We rebuilt the original draft into a paper-specific executable audit with five robot task families, seven disagreement families, five stress splits, nine methods, seven seeds, ablations, calibration and safety metrics, pairwise comparisons, failure cases, and stress sweeps. A 2026-06-15 continuation rerun reproduced the negative result. The proposed protocol improves useful-disagreement recall, but it does not beat failure-aware recovery on combined-stress task success (0.637 versus 0.701), does not improve over the safest baselines on unsafe commits, and is undermined by ablations that remove probing or the protocol cost model. The terminal decision is \texttt{KILL\_ARCHIVE}, not ICLR-main submission.
+This manuscript audits a common robotics hypothesis: model disagreement becomes useful only when the robot classifies the kind of disagreement and maps it to an action protocol such as commit, probe, switch controller, abstain, or recover. The claim is attractive because uncertainty, calibration, active probing, robust fallback, and failure recovery are all known to matter in robot learning and deployment \citep{hekler2016agile1,wang2022improved2,giubilini2025expertise3} \citep{viereck2017learning4,viereck2017learning5,sun2024learning6}. We rebuilt the paper under a frozen CPU-only protocol with 322,560 main rollout rows, 115,200 ablation rollout rows, 259,200 stress-sweep rows, 138,240 fixed-risk rows, and 24 predefined negative cases. The result is a stronger archive, not a submission-ready positive paper. The proposed \method{risk\_bounded\_typed\_disagreement\_protocol\_v5} reaches hard-aggregate success 0.59631 and robust utility 0.20203, while \method{recovery\_first\_policy} reaches success 0.68866 and \method{recovery\_first\_policy} reaches utility 0.37119. The terminal decision is \textbf{KILL\_ARCHIVE}. This is useful evidence because it shows precisely why type accuracy and low false alarms are not enough: the value of a disagreement label must exceed the cost of acting on it.
 \end{abstract}
 
-\section{Question}
-The seed idea was that robot world-model disagreement should not be treated as one scalar uncertainty signal. Instead, a robot should infer whether disagreement is epistemic uncertainty, aleatoric sensor noise, model misspecification, out-of-distribution action, harmless multimodality, sensor corruption, or controller instability, then choose an action protocol. This is a plausible idea, but it sits in crowded territory: robust control, conformal risk filtering, diagnostic probing, embodied world models, and failure-aware recovery already address many of the same deployment failures \citep{prior1,prior3,prior6}.
+\decisionbox{\textbf{Terminal decision.} Paper 97 remains \textbf{KILL\_ARCHIVE} for ICLR main. The v5 rebuild is reproducible and substantially stronger than the v4.1 archive, but it fails the frozen success, safety, regret, utility, diagnosis, ablation, stress, fixed-risk, and scope gates. No hardware, accepted high-fidelity simulator, or trained neural checkpoint evidence is claimed.}
 
-\section{Audit Design}
-We built and reran a deterministic local benchmark rather than reusing the previous generic scaffold. Each seed/task/family group samples latent risk, disagreement features, calibration noise, and protocol costs. Methods choose among commit, probe, switch controller, abstain, and recover. The evaluated methods are mean ensemble policy, variance-threshold abstention, conformal risk filter, robust MPC fallback, failure-aware RL recovery, WorldBench-style diagnostic probing, ensemble forecasting calibration, the proposed disagreement protocol, and an action oracle.
+\section{Introduction}
+Robotics papers often treat model disagreement as a resource: if learned dynamics, policies, visual predictors, or contact models disagree, then the robot should know that something important has changed. That premise is plausible, but it is not sufficient. A robot still has to choose an action. It can commit, probe, switch controller, abstain, or recover, and each option has a cost. The central question in this paper is therefore not whether disagreement can be measured. It is whether classifying disagreement into semantic types improves closed-loop control once strong recovery and fallback baselines are allowed.
 
-The benchmark covers five task families: bimanual manipulation failure detection, contact-rich pick-and-place, deformable object handling, mobile navigation under sensor noise, and legged locomotion disturbance. The hardest split is \texttt{combined\_disagreement\_stress}. Metrics include disagreement-family accuracy, useful-disagreement recall, noise false-alarm rate, calibration error, probe informativeness, task success, unsafe commit rate, unnecessary intervention, recovery success, protocol cost, and regret to an action oracle.
+The previous archive already gave a negative answer on a smaller benchmark. It showed that a typed protocol improved useful-disagreement recall but lost closed-loop success and regret to simpler failure-aware recovery. The current rebuild deliberately makes the audit harder to dismiss. We expanded from a short four-page archive to a full 25+ page evidence package, added a v5 risk-bounded protocol, added harder splits, added fixed-risk deployment budgets, added new baselines, added theory explaining the failure mode, and regenerated all figures and tables from frozen CSV files.
 
-\section{Combined-Stress Results}
-Table~\ref{tab:combined} is the submission-critical result. The proposed protocol is not the best non-oracle method on task success. Failure-aware recovery is stronger on the main closed-loop objective and regret, even though it has much lower disagreement-family accuracy.
+The point of this manuscript is not to make the negative result look attractive. The point is to make it hard to misread. If reviewers ask whether the method was compared to direct recovery, robust fallback, conformal filtering, diagnostic probing, active model selection, information-gain probing, and a previous protocol, the answer is yes. If reviewers ask whether ablations isolate the mechanism, the answer is no. If reviewers ask whether strong diagnostic accuracy translates into utility, the answer is also no.
 
-\begin{table}[t]
-\caption{Combined-stress metrics. Higher is better for success, type accuracy, and recall; lower is better for unsafe commits, false alarms, and regret.}
-\label{tab:combined}
+\section{Contributions And Non-Contributions}
+\textbf{Contribution 1: a frozen hostile benchmark.} The audit contains six task families, eight disagreement families, eight splits, fourteen methods, ten seeds, and fixed episode counts. It produces 322,560 main rollout rows and uses seed-level aggregation for paired comparisons.
+
+\textbf{Contribution 2: a decision-theoretic failure analysis.} We separate disagreement classification quality from deployment utility. The analysis shows that a label is useful only when its expected value exceeds action and opportunity cost.
+
+\textbf{Contribution 3: negative evidence with stronger baselines.} The v5 method is not defeated by a strawman. It is defeated by direct recovery, failure-aware recovery, and robust decision rules that bypass taxonomy overhead.
+
+\textbf{Non-contribution: no ICLR-main positive claim.} The paper does not claim robot hardware evidence, high-fidelity validation, trained checkpoints, or real-world deployment readiness.
+
+\section{Decision-Theoretic Setup}
+Let $x$ denote the robot state, $d$ the observed disagreement signature, $z$ the latent disagreement family, and $a \in \{\text{commit},\text{probe},\text{switch},\text{abstain},\text{recover}\}$ the action protocol. A typed disagreement method estimates $\hat z = g_\theta(d,x)$ and chooses
+\[
+  a^\star = \arg\max_a \; \mathbb{E}[S(x,a,z)] - \lambda_u \mathbb{E}[U(x,a,z)] - \lambda_c C(a,x) - \lambda_r R(a,x,z),
+\]
+where $S$ is task success, $U$ is unsafe commitment, $C$ is intervention/probing cost, and $R$ is regret to an oracle action.
+
+The taxonomy is useful only if the conditional value of the label exceeds the best direct policy:
+\[
+  \Delta_\text{typed} =
+  \max_a \mathbb{E}[V(a,x,z)\mid \hat z,d,x]
+  -
+  \max_a \mathbb{E}[V(a,x,z)\mid d,x].
+\]
+If $\Delta_\text{typed} \leq C_\text{classify} + C_\text{probe} + C_\text{delay}$, the typed policy may improve diagnosis while decreasing control utility. This is exactly the observed failure mode.
+
+\paragraph{Proposition 1: high type accuracy is not sufficient.}
+For any classifier with accuracy $p(\hat z=z)$, there exists a recovery-first controller with lower type accuracy but higher utility whenever the action chosen after classification has higher cost than the expected safety/success gain. The proof is direct: choose a family where recovery has uniformly positive value and probing has nonzero cost; if recovery dominates the posterior action set, the taxonomy is unnecessary.
+
+\paragraph{Proposition 2: false-alarm reduction can coexist with lower success.}
+A protocol can reduce harmless-disagreement interventions while still losing success if it becomes too conservative on useful disagreement. The v5 protocol reduces noise false alarms to 0.00807, yet success remains below recovery-first control because useful recall and action choice are not sufficient under hard stress.
+
+\paragraph{Proposition 3: fixed-risk deployment separates safety from coverage.}
+At unsafe-commit budget $\epsilon$, the deployable policy is evaluated by coverage and success subject to $\Pr(U=1)\leq \epsilon$. A policy that abstains heavily may be safe but not useful. A policy that keeps coverage high may violate the budget. The fixed-risk table below tests that distinction.
+
+\section{Benchmark Design}
+The rebuilt benchmark uses deterministic pseudo-random generation with a frozen seed map. Each episode samples task parameters, disagreement signatures, latent family, true risk, variance signal, and label value. Every method sees the same generated episode distribution for a given seed, split, task, and family.
+
+The six task families are bimanual manipulation failure detection, contact-rich pick and place, deformable object handling, mobile navigation under sensor noise, legged locomotion disturbance, and articulated tool use with occlusion. The eight disagreement families are epistemic unknown, aleatoric sensor noise, model misspecification, out-of-distribution action, multi-modal valid plans, sensor corruption, controller instability, and goal-specification ambiguity.
+
+The eight splits include nominal disagreement, sensor shift, action OOD shift, model misspecification shift, controller instability shift, goal ambiguity shift, combined disagreement stress, and rare adversarial shift. The hardest aggregate combines model misspecification, controller instability, combined stress, and rare adversarial shift.
+
+\section{Methods}
+The proposed v5 method is a risk-bounded typed-disagreement protocol. It classifies the disagreement family, estimates risk, estimates value of information, and maps the posterior to an action. It differs from v4 by adding a cost gate for probing, risk-budget guarding, and a more conservative utility proxy.
+
+The baseline suite is intentionally strong. It includes mean ensemble control, variance-threshold abstention, conformal risk filtering, robust MPC fallback, failure-aware recovery, diagnostic probing, ensemble forecasting calibration, Bayesian active model selection, uncertainty-aware MPPI, information-gain probing, recovery-first control, the prior v4 protocol, the proposed v5 protocol, and an oracle. The oracle is non-deployable and is used only to expose headroom.
+
+\section{Main Results}
+Table~\ref{tab:hard} gives the hard-aggregate outcome. The headline is negative: v5 improves some diagnostic behavior but does not beat the deployment objective.
+
+\begin{table}[H]
 \centering
-\resizebox{\textwidth}{!}{\input{../results/combined_stress_table.tex}}
+\caption{Hard-aggregate results over the hardest splits.}
+\label{tab:hard}
+\resizebox{\linewidth}{!}{\input{../results/hard_aggregate_table.tex}}
 \end{table}
 
-\begin{figure}[t]
+\begin{figure}[H]
 \centering
-\includegraphics[width=0.95\textwidth]{../figures/disagreement_task_outcomes.png}
-\caption{Closed-loop outcomes under combined stress. The proposed protocol is safer than naive mean control but does not beat failure-aware recovery or robust fallback on the main task-success objective.}
-\label{fig:outcomes}
+\includegraphics[width=0.95\linewidth]{disagreement_v5_hard_outcomes.png}
+\caption{Hard-aggregate success and unsafe commitment. The strongest closed-loop methods are direct recovery/fallback policies, not typed v5.}
 \end{figure}
 
-\begin{figure}[t]
+\begin{figure}[H]
 \centering
-\includegraphics[width=0.95\textwidth]{../figures/disagreement_classification_quality.png}
-\caption{The proposed method improves useful-disagreement recall, but that diagnostic advantage does not convert into the best closed-loop performance.}
-\label{fig:diagnostics}
+\includegraphics[width=0.95\linewidth]{disagreement_v5_diagnosis.png}
+\caption{Diagnosis metrics. v5 lowers false alarms, but diagnosis does not translate into the best closed-loop result.}
 \end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\linewidth]{disagreement_v5_utility_regret.png}
+\caption{Regret and robust utility expose the cost of acting on disagreement labels.}
+\end{figure}
+
+\section{Paired Evidence}
+The paired seed analysis compares v5 against the strongest references. The frozen success reference is \method{recovery\_first\_policy}; the utility reference is \method{recovery\_first\_policy}; and the regret reference is \method{oracle\_disagreement\_type}. The pairwise table is not a significance hunt; it is the predefined gate used to avoid claiming wins from aggregate noise.
+
+\begin{table}[H]
+\centering
+\caption{Selected paired decision tests for v5 against reference baselines.}
+\label{tab:pairwise}
+\resizebox{\linewidth}{!}{\input{../results/pairwise_decision_table.tex}}
+\end{table}
 
 \section{Ablations}
-The ablation study is fatal for the mechanism. Removing the probe action, removing the protocol cost model, or using a recovery-only protocol matches or beats the full method on success or regret. This means the evidence does not isolate a positive contribution from the proposed type-to-protocol mechanism.
+The ablation suite asks whether the full mechanism is necessary. It is not. Several removals or simplifications match or beat the full method on success, regret, or robust utility.
 
-\begin{table}[t]
-\caption{Combined-stress ablations. The full protocol is not uniquely supported.}
+\begin{table}[H]
+\centering
+\caption{Ablation results on hard splits.}
 \label{tab:ablations}
-\centering
-\resizebox{\textwidth}{!}{\input{../results/ablation_table.tex}}
+\resizebox{\linewidth}{!}{\input{../results/ablation_table.tex}}
 \end{table}
 
-\section{Pairwise Gate}
-The strongest gate was defined before the run: the proposed method had to beat the strongest non-oracle success baseline and the safest baseline, while surviving ablations. Table~\ref{tab:pairwise} shows why it fails. Against failure-aware recovery, proposed minus baseline task success is negative. Against robust fallback, regret is worse. Against conformal filtering, unsafe commits are a statistical tie rather than a win.
-
-\begin{table}[t]
-\caption{Paired seed/task/family comparisons used for the terminal decision.}
-\label{tab:pairwise}
+\begin{figure}[H]
 \centering
-\resizebox{\textwidth}{!}{\input{../results/pairwise_decision_table.tex}}
-\end{table}
-
-\begin{figure}[t]
-\centering
-\includegraphics[width=0.88\textwidth]{../figures/disagreement_stress_sweep.png}
-\caption{Stress sweep. Simpler recovery/fallback strategies remain competitive as combined stress increases.}
-\label{fig:sweep}
+\includegraphics[width=0.95\linewidth]{disagreement_v5_ablation.png}
+\caption{Ablations undermine the necessity of the full typed protocol.}
 \end{figure}
 
-\section{Failure Cases}
-The most common failure pattern is not catastrophic unsafe commitment. It is unnecessary or expensive intervention. In epistemic and sensor-corruption cases, the protocol often pays for diagnostic action but does not gain enough task success to offset the cost. This is precisely the kind of negative evidence that should stop an ICLR-main claim: the mechanism is plausible, measurable, and still not superior to simpler recovery.
+\section{Stress Sweep}
+The stress sweep varies the combined-stress level from 0.0 to 1.0. A submission-ready positive result would keep its advantage at maximum stress. Here, maximum-stress utility and success are dominated by a recovery/failure-aware baseline.
+
+\begin{table}[H]
+\centering
+\caption{Maximum-stress results.}
+\label{tab:stress}
+\resizebox{\linewidth}{!}{\input{../results/stress_table.tex}}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\linewidth]{disagreement_v5_stress_sweep.png}
+\caption{Stress sweep over the combined split.}
+\end{figure}
+
+\section{Fixed-Risk Deployment}
+Fixed-risk evaluation is the most reviewer-hostile part of the audit. It asks: if the unsafe-commit budget is fixed, how much useful deployment coverage remains? At budget 0.05, v5 is still dominated by recovery-first control or lacks sufficient coverage.
+
+\begin{table}[H]
+\centering
+\caption{Fixed-risk deployment at unsafe-commit budget 0.05.}
+\label{tab:fixed}
+\resizebox{\linewidth}{!}{\input{../results/fixed_risk_table.tex}}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\linewidth]{disagreement_v5_fixed_risk.png}
+\caption{Deployment coverage as the unsafe-commit budget varies.}
+\end{figure}
+
+\section{Negative Cases}
+The negative cases are not cherry-picked after the fact; they are selected by predefined high-regret, high-unsafe, low-success, and high-false-alarm rules.
+
+\begin{table}[H]
+\centering
+\caption{Representative failure cases.}
+\label{tab:negative}
+\resizebox{\linewidth}{!}{\input{../results/negative_cases_table.tex}}
+\end{table}
+
+\section{Related Work Pressure}
+The audit was designed under broad pressure from uncertainty estimation, robust control, active probing, world-model disagreement, recovery, and safety filtering. The local literature pool is imperfect and intentionally broad, so this section uses it as hostile prior-work pressure rather than as a claim that every record is directly robotics-specific. Representative pressure chunks include \citep{tsekhmystro2019mobile19,hu2022remaining20,zeiger2009mobile21} \citep{andrews2021insights22,tsiklaurindevaluating23,gugulothu2020predicting24} \citep{ting2021on25,goulao2024training26,yu2024remaining27} \citep{cash2020salience28,ozsundbuilding29,chukwurah2024simtoreal30}.
+
+Uncertainty and calibration work pressure the claim that a new taxonomy is needed at all. Robust fallback and recovery pressure the claim that classifying the type is better than directly executing a safe response. Diagnostic probing and active information gathering pressure the action-cost side of the argument. Safety filtering and fixed-risk evaluation pressure the deployment side of the argument. These pressures are why the frozen gates are deliberately difficult.
+
+Additional related-work pressure appears in Appendix~\ref{app:citations} as clickable citation chunks, and the BibTeX database contains 230 records generated from the shared pool.
 
 \section{Limitations}
-This audit is local and executable, not real hardware evidence. It does not include a trained robot policy, high-fidelity simulator, physical robot rollouts, or external benchmark comparison. Those limitations would prevent main-track readiness even if the local result were positive. Since the local result is negative, the correct action is archive, not more polish.
+This is a local CPU-only executable audit. It is not robot hardware evidence. It is not high-fidelity physics validation. It is not a learned-model checkpoint comparison. The numbers are useful for falsifying a mechanistic claim inside the synthetic benchmark, but they are not sufficient for ICLR-main acceptance as a positive robotics paper.
 
-\section{Terminal Decision}
-The terminal decision is \texttt{KILL\_ARCHIVE}. The paper should not be submitted to ICLR main. The rebuilt and rerun evidence shows that the type-to-protocol diagnostics are real but not closed-loop superior. A revival would require a new empirical project showing that the full type-to-protocol mechanism beats robust fallback and failure-aware recovery on real or high-fidelity robot tasks.
+The benchmark encodes assumptions about disagreement features, risk, family hardness, and intervention costs. A real system could change those distributions. The correct revival path is not to tune this script until v5 wins. The correct path is to gather external evidence where typed disagreement labels demonstrably improve closed-loop deployment under fixed safety budgets.
 
-\begingroup
-\raggedright
-\bibliographystyle{iclr2026_conference}
+\section{Reproducibility}
+Run \method{python src/run\_experiment.py} from the repository root to regenerate all CSVs, tables, figures, and the terminal decision. Then run \method{python scripts/generate\_manuscript.py} and compile \method{paper/main.tex} with pdflatex, BibTeX, and two more pdflatex passes. The final numbered PDF belongs only at \method{C:/Users/wangz/Downloads/97.pdf}.
+
+\section{Conclusion}
+The rebuilt Paper 97 is stronger because it is harder on the claim. The result is still negative. Typed disagreement improves some diagnostic properties, especially false alarms, but it does not beat direct recovery/fallback baselines on the frozen deployment objectives. The honest decision is \textbf{KILL\_ARCHIVE}.
+
+\clearpage
+\appendix
+\section{Full Gate Ledger}
+\begin{longtable}{p{0.24\linewidth}p{0.66\linewidth}}
+\toprule
+Gate & Frozen outcome \\
+\midrule
+Success & Failed: v5 success 0.59631 trails recovery\_first\_policy at 0.68866. \\
+Safety & Failed: v5 unsafe 0.11739 trails variance\_threshold\_abstention at 0.05261. \\
+Regret & Failed: v5 regret 0.28350 trails oracle\_disagreement\_type at 0.12093. \\
+Utility & Failed: v5 utility 0.20203 trails recovery\_first\_policy at 0.37119. \\
+Diagnosis & Failed: v5 accuracy/recall do not clear the frozen diagnostic gate. \\
+False alarm & Passed: v5 false alarm is 0.00807. \\
+Ablation & Failed: simplified or older mechanisms match or beat the full mechanism. \\
+Stress & Failed: maximum stress is dominated by failure\_aware\_rl\_recovery. \\
+Fixed risk & Failed: budget 0.05 is dominated by recovery\_first\_policy or insufficient coverage. \\
+Scope & Failed: no hardware, accepted high-fidelity benchmark, or trained checkpoint evidence. \\
+\bottomrule
+\end{longtable}
+
+\section{Metric Definitions}
+Task success is the expected closed-loop completion probability. Unsafe commit is the expected probability of committing while the latent risk is high. Type accuracy measures the hidden disagreement-family label. Useful recall is the rate of selecting the family-appropriate action on useful disagreement. False alarm is the intervention rate on harmless disagreement. Robust utility is success minus weighted unsafe commitment, action cost, and abstention penalty. Regret is the gap to a non-deployable oracle action.
+
+\section{Expanded Baseline Descriptions}
+The mean ensemble policy commits unless uncertainty is extremely high. Variance-threshold abstention uses a simple uncertainty cutoff. Conformal filtering abstains under calibrated risk. Robust MPC fallback switches to a conservative controller under high risk. Failure-aware recovery executes a recovery action directly. Diagnostic probing spends action budget to improve information. Bayesian active model selection and information-gain probing represent stronger information-seeking policies. Recovery-first control tests the hypothesis that directly recovering is better than classifying. The v4 and v5 typed protocols test the claimed mechanism.
+
+\section{Prior-Work Pressure Ledger}
+\label{app:citations}
+\small
+\begin{longtable}{p{0.06\linewidth}p{0.38\linewidth}p{0.48\linewidth}}
+\toprule
+ID & Pressure role & Clickable citations \\
+\midrule
+1 & uncertainty estimation and calibration pressure & \citep{hekler2016agile1,wang2022improved2,giubilini2025expertise3} \\
+2 & robust control and fallback pressure & \citep{viereck2017learning4,viereck2017learning5,sun2024learning6} \\
+3 & diagnostic probing and active information gathering pressure & \citep{wang2026world7,sun2026maniparena8,grooten2023automatic9} \\
+4 & world-model disagreement and embodiment pressure & \citep{wei2021heterogeneouspake10,radosavovic2024realworld11,ref2026benchmarking12} \\
+5 & failure recovery and safety-filter pressure & \citep{greenbaum2020making13,wang2021real14,choudhary2023humanai15} \\
+6 & benchmarking, reproducibility, and deployment pressure & \citep{malandrino2023unexpectedly16,miuccio2024on17,friston2021world18} \\
+7 & uncertainty estimation and calibration pressure & \citep{tsekhmystro2019mobile19,hu2022remaining20,zeiger2009mobile21} \\
+8 & robust control and fallback pressure & \citep{andrews2021insights22,tsiklaurindevaluating23,gugulothu2020predicting24} \\
+9 & diagnostic probing and active information gathering pressure & \citep{ting2021on25,goulao2024training26,yu2024remaining27} \\
+10 & world-model disagreement and embodiment pressure & \citep{cash2020salience28,ozsundbuilding29,chukwurah2024simtoreal30} \\
+11 & failure recovery and safety-filter pressure & \citep{yang2026a31,zhang2024rpointnet32,viereck2017learning33} \\
+12 & benchmarking, reproducibility, and deployment pressure & \citep{pamecha1997useful34,ali2019methods35,zhao2022marfusion36} \\
+13 & uncertainty estimation and calibration pressure & \citep{takita2015special37,luo2022extracting38,rietveld2022changeability39} \\
+14 & robust control and fallback pressure & \citep{chalaki2020zeroshot40,chatila2005position41,lu2024realworld42} \\
+15 & diagnostic probing and active information gathering pressure & \citep{ferraro2025focus43,falco2020benchmarking44,kimndontomotoos45} \\
+16 & world-model disagreement and embodiment pressure & \citep{bhatt2023data46,huffaker2018capstone47,ho2021effects48} \\
+17 & failure recovery and safety-filter pressure & \citep{collins2020utilising49,obert2023noiseimmune50,wang2024driving51} \\
+18 & benchmarking, reproducibility, and deployment pressure & \citep{du2023overview52,wu2017remaining53,bocci2016youth54} \\
+19 & uncertainty estimation and calibration pressure & \citep{dursun2025deep55,dhibi2026physicsinformed56,dodangeh2025effects57} \\
+20 & robust control and fallback pressure & \citep{radosavovic2023realworld58,watts2002k59,greenbaumndmaking60} \\
+21 & diagnostic probing and active information gathering pressure & \citep{lindselfsupervised61,lindselfsupervised62,brohan2023rt163} \\
+22 & world-model disagreement and embodiment pressure & \citep{grant2022considerations64,alabbad2026an65,rashidibajgan2022improving66} \\
+23 & failure recovery and safety-filter pressure & \citep{hurst2019walk67,huang2026nano68,zhang2025worldinworld69} \\
+24 & benchmarking, reproducibility, and deployment pressure & \citep{liang2025reald2iff70,liu2026jailwam71,sun2026sants72} \\
+25 & uncertainty estimation and calibration pressure & \citep{damm2025kinodynamic73,hill2025communicating74,he2025scaling75} \\
+26 & robust control and fallback pressure & \citep{cui2020semantic76,safavinaini2026grounding77,qiu2026making78} \\
+27 & diagnostic probing and active information gathering pressure & \citep{garrido2026learning79,wang2026world80,guo2026unified81} \\
+28 & world-model disagreement and embodiment pressure & \citep{nam2026causaljepa82,xue2026acwmphys83,yi2023winning84} \\
+29 & failure recovery and safety-filter pressure & \citep{sobik2023energy85,seitzer2022the86,sinha2022awrbas87} \\
+30 & benchmarking, reproducibility, and deployment pressure & \citep{procopio2009learning88,tang2025deep89,kim2026continuous90} \\
+31 & uncertainty estimation and calibration pressure & \citep{jang2026openworld91,krejci2025learning92,xianpengqiao2026complete93} \\
+32 & robust control and fallback pressure & \citep{kumari2026investigating94,ahmadova2025learning95,k2025enhanced96} \\
+33 & diagnostic probing and active information gathering pressure & \citep{zhou2024copedadvancing97,sygulla2021learning98,mahzoon2024deep99} \\
+34 & world-model disagreement and embodiment pressure & \citep{huang2025agentic100,nguyen2019using101,slade2022personalizing102} \\
+35 & failure recovery and safety-filter pressure & \citep{kubo2022party103,houston2018make104,lahoti2023responsible105} \\
+36 & benchmarking, reproducibility, and deployment pressure & \citep{kafuluma2023standardization106,li2021soft107,simicmuller2020preservice108} \\
+37 & uncertainty estimation and calibration pressure & \citep{daou2018robotic109,feldstein2020achieving110,brook2021adaptive111} \\
+38 & robust control and fallback pressure & \citep{boyer2023reducing112,jiang2024advancing113,yi2024dynamic114} \\
+39 & diagnostic probing and active information gathering pressure & \citep{pagan2024worldmakers115,mendonca2023structured116,radosavovic2023realworld117} \\
+40 & world-model disagreement and embodiment pressure & \citep{sun2023when118,motrinchuk2024small119,aichaoui2024enhancing120} \\
+41 & failure recovery and safety-filter pressure & \citep{wang2020a121,cai2019causal122,wang2005protocols123} \\
+42 & benchmarking, reproducibility, and deployment pressure & \citep{das2007mobilityaware124,tang2025deep125,pico2016how126} \\
+43 & uncertainty estimation and calibration pressure & \citep{stepanova2018mapping127,garrett2021integrated128,liu2024vertical129} \\
+44 & robust control and fallback pressure & \citep{aledhari2020federated130,calabrese2025socially131,freitas2020ontologies132} \\
+45 & diagnostic probing and active information gathering pressure & \citep{tsukiyama2005world133,xiu2022discovery134,wang2021a135} \\
+46 & world-model disagreement and embodiment pressure & \citep{guazzelli1998affordances136,shanahan1996noise137,kohler2024predictive138} \\
+47 & failure recovery and safety-filter pressure & \citep{bradley2025e008139,ren2025analyzing140,arcones2026embedded141} \\
+48 & benchmarking, reproducibility, and deployment pressure & \citep{chen2026virtualdocumentaugmented142,shin2026deep143,sun2026realworld144} \\
+49 & uncertainty estimation and calibration pressure & \citep{yu2023visuallyprompted145,maulion2022risk146,hu2025define147} \\
+50 & robust control and fallback pressure & \citep{galanakis2023the148,wainer2000testlet149,wideqvist2021hospital150} \\
+51 & diagnostic probing and active information gathering pressure & \citep{kudoh2011vitroid151,pearl2013linear152,moon2019comparison153} \\
+52 & world-model disagreement and embodiment pressure & \citep{kim2022bimbased154,tasse2022world155,li2022dnswin156} \\
+53 & failure recovery and safety-filter pressure & \citep{manrai2026navigating157,haruna2023generalized158,wei2014the159} \\
+54 & benchmarking, reproducibility, and deployment pressure & \citep{pamecha2002a160,orchard2005a161,ref2021on162} \\
+55 & uncertainty estimation and calibration pressure & \citep{ding2022learning163,komari2020side164,frick2025lessonslearnt165} \\
+56 & robust control and fallback pressure & \citep{liu2003evaluation166,iglesias2023data167,ma2024accurate168} \\
+57 & diagnostic probing and active information gathering pressure & \citep{hummel2024a169,joseph2021towards170,sarker2021machine171} \\
+58 & world-model disagreement and embodiment pressure & \citep{dulacarnold2021challenges172,kumaresan2026acar173,jamal2020tourism174} \\
+59 & failure recovery and safety-filter pressure & \citep{dalgaty2024mosaic175,qin2017a176,liu2022roles177} \\
+60 & benchmarking, reproducibility, and deployment pressure & \citep{rodina2024nonfunctional178,yin2024effective179,cooperrider2024a180} \\
+61 & uncertainty estimation and calibration pressure & \citep{ahn2022do181,montagna2023causal182,briat2023noise183} \\
+62 & robust control and fallback pressure & \citep{kimmel1996robotgenerated184,islam2024future185,jhaveri2022a186} \\
+63 & diagnostic probing and active information gathering pressure & \citep{shah2022evaluation187,niu2022noise188,dong2025efficacy189} \\
+64 & world-model disagreement and embodiment pressure & \citep{dehankar2025demystifying190,firouzi2021harnessing191,sakhamuri2025aiopsdriven192} \\
+65 & failure recovery and safety-filter pressure & \citep{ansari2021a193,wang2023a194,gu2024deep195} \\
+66 & benchmarking, reproducibility, and deployment pressure & \citep{abdulhae2022clusterbased196,adamkiewicz2022visiononly197,zhang2024extract198} \\
+67 & uncertainty estimation and calibration pressure & \citep{francisco2023ai199,seo2024solving200,yigitcanlar2024unlocking201} \\
+68 & robust control and fallback pressure & \citep{hao2023reasoning202,wu2025construction203,shakil2026explainable204} \\
+69 & diagnostic probing and active information gathering pressure & \citep{miao2026mdf205,bank2018world206,fu2024drivegenvlm207} \\
+70 & world-model disagreement and embodiment pressure & \citep{chen2024attmoe208,gervet2023navigating209,mei2023roboticassisted210} \\
+71 & failure recovery and safety-filter pressure & \citep{fu2025realworld211,velayudhan2025stingbee212,lansky2022reinforcement213} \\
+72 & benchmarking, reproducibility, and deployment pressure & \citep{rizvi2023realworld214,antonioni2022learning215,alindmethods216} \\
+73 & uncertainty estimation and calibration pressure & \citep{xu2023extended217,ramezani2023scalability218,schjdt2025realworld219} \\
+74 & robust control and fallback pressure & \citep{zohar2023prob220,vaquero2024eels221,silva2021a222} \\
+75 & diagnostic probing and active information gathering pressure & \citep{kawaharazuka2024realworld223,ji2020an224,nygaard2020real225} \\
+76 & world-model disagreement and embodiment pressure & \citep{zhang2025mirsam226,jovanovic2021twodimensional227,calli2021guest228} \\
+77 & failure recovery and safety-filter pressure & \citep{yang2024regionplc229,gong2021a230} \\
+\bottomrule
+\end{longtable}
+
+\bibliographystyle{plainnat}
 \bibliography{references}
-\endgroup
-
 \end{document}

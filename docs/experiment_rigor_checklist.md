@@ -1,33 +1,23 @@
 # Experiment Rigor Checklist
 
-## v4 Completed
+- [x] Frozen plan written before execution: `docs/paper97_expanded_submission_plan_20260622.md`.
+- [x] CPU-only, RAM-light runner.
+- [x] Strong baselines included.
+- [x] Previous v4 protocol retained as a baseline.
+- [x] Oracle included only as non-deployable headroom.
+- [x] Main benchmark rerun at expanded scale.
+- [x] Raw rollout CSV persisted.
+- [x] Seed-level metrics persisted.
+- [x] Paired seed tests persisted.
+- [x] Ablation suite persisted.
+- [x] Stress sweep persisted.
+- [x] Fixed-risk deployment budget sweep persisted.
+- [x] Negative cases persisted.
+- [x] Generated LaTeX tables and figures from CSV outputs.
+- [x] Terminal decision derived from frozen gates.
+- [x] Manuscript states negative evidence honestly.
+- [x] No real robot or high-fidelity validation is claimed.
 
-- [x] Paper-specific benchmark rather than the old generic branch scaffold.
-- [x] Multiple seeds.
-- [x] Strong non-oracle baselines.
-- [x] Ablations.
-- [x] Stress splits and maximum-stress sweep.
-- [x] Uncertainty/calibration metrics.
-- [x] Safety and regret metrics.
-- [x] Pairwise seed/task/family comparisons.
-- [x] Failure cases.
-- [x] Generated figures and LaTeX result tables.
-- [x] Explicit terminal gate in `results/summary.txt`.
+## Result
 
-## v4.1 Continuation Completed
-
-- [x] Paper-specific continuation execution plan before rerun.
-- [x] `python -m py_compile src/run_experiment.py`.
-- [x] Full rerun without reducing seeds, episodes, task families, disagreement families, methods, ablations, or stress levels.
-- [x] CSV integrity audit over row counts and coverage.
-- [x] Confirmation that the rerun keeps the terminal decision at KILL_ARCHIVE.
-
-## ICLR Main Bar Not Met
-
-- [ ] Real robot validation.
-- [ ] High-fidelity simulator benchmark.
-- [ ] Trained learned model checkpoint.
-- [ ] External benchmark suite comparison.
-- [ ] Evidence that full method beats robust fallback and failure-aware recovery.
-
-Decision: fail ICLR-main empirical-rigor gate; archive.
+The audit is rigorous enough to support an honest negative archive. It is not sufficient for a positive ICLR-main submission.
