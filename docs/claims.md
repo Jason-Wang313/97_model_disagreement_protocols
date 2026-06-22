@@ -4,19 +4,22 @@
 
 Model disagreement is useful for robotics only when the robot can classify the disagreement type and choose an action protocol: commit, probe, switch controller, abstain, or recover.
 
-## Supported By The v4/v4.1 Audit
+## Supported By The v5 Audit
 
-- The executable benchmark tests five robot task families, seven hidden disagreement families, five stress splits, nine methods, seven seeds, ablations, stress sweeps, and failure cases.
-- The 2026-06-15 v4.1 continuation rerun reproduces the negative terminal decision with regenerated CSVs, figures, LaTeX tables, and summary evidence.
-- The proposed protocol obtains higher useful-disagreement recall than most baselines on combined stress.
-- Type-aware intervention reduces the worst unsafe-commit behavior of naive mean and variance policies.
+- The repository now contains a frozen CPU-only v5 benchmark with six tasks, eight disagreement families, eight splits, fourteen methods, ten seeds, ablations, stress sweeps, fixed-risk deployment budgets, paired seed comparisons, and failure cases.
+- V5 reduces harmless-disagreement false alarms on the hard aggregate: 0.00807.
+- The rebuilt manuscript is 31 pages, has bright boxed clickable citations, generated tables/figures, and a validated Downloads-only PDF.
+- The negative result is reproducible with `python src/run_experiment.py`.
 
 ## Not Supported
 
-- The proposed protocol does not beat `failure_aware_rl_recovery` on combined-stress task success: 0.637 vs 0.701.
-- The proposed protocol does not improve over the safest baseline on unsafe commits; conformal filtering and several robust methods already reach essentially zero unsafe commits.
-- `minus_probe_action`, `minus_protocol_cost_model`, and `recovery_only_protocol` match or beat the full protocol on success or regret.
-- No real robot or high-fidelity simulator validation is available.
+- V5 does not beat `recovery_first_policy` on hard-aggregate task success: 0.59631 vs 0.68866.
+- V5 does not beat `recovery_first_policy` on robust utility: 0.20203 vs 0.37119.
+- V5 does not beat `failure_aware_rl_recovery` on regret: 0.28350 vs 0.13682.
+- V5 does not improve over the safest deployable baseline on unsafe commitment: 0.11739 vs 0.05261 for `variance_threshold_abstention`.
+- Ablations and simpler mechanisms match or beat the full v5 mechanism.
+- Maximum-stress and fixed-risk deployment gates fail.
+- No real robot, accepted high-fidelity simulator, or trained-model validation is available.
 
 ## Submission Claim
 

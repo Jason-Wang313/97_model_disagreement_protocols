@@ -1,46 +1,100 @@
-Paper 97: model_disagreement_protocols v4 evidence audit
+Paper 97: model_disagreement_protocols expanded v5 evidence audit
 Terminal decision: KILL_ARCHIVE
-Design: 5 robotics tasks x 7 disagreement families x 5 splits x 9 methods, 7 seeds, 88 episodes per seed/task/family/method group.
-Claim under test: disagreement helps only when classified into an action protocol (commit, probe, switch controller, abstain, recover).
+ICLR main ready: no
+Design: 6 robotics tasks x 8 disagreement families x 8 splits x 14 methods, 10 seeds, 6 episodes per seed/task/family/split/method cell.
+Claim under test: typed disagreement should choose commit/probe/switch/abstain/recover better than direct robust or recovery baselines.
 
-Combined-stress evidence:
-- oracle_disagreement_type: success=0.718 +/- 0.012, unsafe=0.000, type_acc=1.000, recall=0.999, noise_false_alarm=0.145, cost=0.171, regret=0.000
-- failure_aware_rl_recovery: success=0.701 +/- 0.017, unsafe=0.000, type_acc=0.225, recall=0.823, noise_false_alarm=0.300, cost=0.198, regret=0.051
-- robust_mpc_fallback: success=0.649 +/- 0.012, unsafe=0.000, type_acc=0.159, recall=0.752, noise_false_alarm=0.300, cost=0.164, regret=0.082
-- proposed_disagreement_protocol: success=0.637 +/- 0.013, unsafe=0.000, type_acc=0.496, recall=0.972, noise_false_alarm=0.170, cost=0.214, regret=0.111
-- ensemble_forecasting_calibrator: success=0.562 +/- 0.007, unsafe=0.001, type_acc=0.328, recall=0.551, noise_false_alarm=0.186, cost=0.121, regret=0.123
-- worldbench_diagnostic_probe: success=0.531 +/- 0.008, unsafe=0.000, type_acc=0.441, recall=0.971, noise_false_alarm=0.909, cost=0.262, regret=0.240
-- mean_ensemble_policy: success=0.472 +/- 0.011, unsafe=0.006, type_acc=0.014, recall=0.069, noise_false_alarm=0.025, cost=0.030, regret=0.169
-- conformal_risk_filter: success=0.266 +/- 0.010, unsafe=0.000, type_acc=0.190, recall=0.761, noise_false_alarm=0.524, cost=0.186, regret=0.460
-- variance_threshold_abstention: success=0.155 +/- 0.007, unsafe=0.001, type_acc=0.119, recall=0.948, noise_false_alarm=0.757, cost=0.201, regret=0.585
+Row counts:
+- dataset_summary_rows: 23040
+- main_rollout_rows: 322560
+- main_group_rows: 53760
+- main_seed_metric_rows: 1120
+- main_metric_rows: 112
+- hard_seed_rows: 140
+- hard_metric_rows: 14
+- hard_pairwise_rows: 96
+- ablation_rollout_rows: 115200
+- ablation_seed_rows: 100
+- ablation_metric_rows: 10
+- stress_rollout_rows: 259200
+- stress_seed_rows: 900
+- stress_metric_rows: 90
+- fixed_risk_rows: 138240
+- fixed_risk_seed_rows: 480
+- fixed_risk_metric_rows: 48
+- fixed_risk_pairwise_rows: 56
+- negative_cases: 24
+
+Hard-aggregate evidence:
+- recovery_first_policy: success=0.68866 +/- 0.00269, unsafe=0.07896, type_acc=0.18542, recall=0.11571, false_alarm=0.10573, regret=0.13882, utility=0.37119
+- failure_aware_rl_recovery: success=0.68425 +/- 0.00090, unsafe=0.08364, type_acc=0.22977, recall=0.12674, false_alarm=0.08281, regret=0.13682, utility=0.36209
+- oracle_disagreement_type: success=0.65284 +/- 0.00080, unsafe=0.07753, type_acc=1.00000, recall=0.75000, false_alarm=0.00000, regret=0.12093, utility=0.36460
+- uncertainty_aware_mppi: success=0.64157 +/- 0.00171, unsafe=0.10998, type_acc=0.29184, recall=0.24896, false_alarm=0.04297, regret=0.20106, utility=0.28861
+- robust_mpc_fallback: success=0.62438 +/- 0.00397, unsafe=0.10120, type_acc=0.16771, recall=0.22292, false_alarm=0.07917, regret=0.21219, utility=0.27885
+- typed_disagreement_protocol_v4: success=0.60975 +/- 0.00194, unsafe=0.07648, type_acc=0.51042, recall=0.63698, false_alarm=0.04887, regret=0.20707, utility=0.27847
+- risk_bounded_typed_disagreement_protocol_v5: success=0.59631 +/- 0.00172, unsafe=0.11739, type_acc=0.53602, recall=0.49366, false_alarm=0.00807, regret=0.28350, utility=0.20203
+- bayesian_active_model_selection: success=0.57679 +/- 0.00221, unsafe=0.12212, type_acc=0.40078, recall=0.46849, false_alarm=0.03359, regret=0.29283, utility=0.19270
+- ensemble_forecasting_calibrator: success=0.55120 +/- 0.00172, unsafe=0.13731, type_acc=0.33099, recall=0.25174, false_alarm=0.05069, regret=0.32211, utility=0.16342
+- worldbench_diagnostic_probe: success=0.53983 +/- 0.00131, unsafe=0.08717, type_acc=0.45330, recall=0.39028, false_alarm=0.20634, regret=0.31774, utility=0.16779
+- information_gain_probe_policy: success=0.53772 +/- 0.00111, unsafe=0.11432, type_acc=0.42135, recall=0.32622, false_alarm=0.09566, regret=0.35168, utility=0.13385
+- mean_ensemble_policy: success=0.45757 +/- 0.00222, unsafe=0.19756, type_acc=0.01615, recall=0.00000, false_alarm=0.00738, regret=0.49683, utility=-0.01021
+- conformal_risk_filter: success=0.25260 +/- 0.00303, unsafe=0.05530, type_acc=0.19019, recall=0.05469, false_alarm=0.14193, regret=0.62485, utility=-0.13932
+- variance_threshold_abstention: success=0.25062 +/- 0.00275, unsafe=0.05261, type_acc=0.11875, recall=0.01528, false_alarm=0.15095, regret=0.61036, utility=-0.12461
+
+Reference winners:
+- best_success_reference=recovery_first_policy; v5=0.59631; best=0.68866
+- best_safety_reference=variance_threshold_abstention; v5=0.11739; best=0.05261
+- best_regret_reference=failure_aware_rl_recovery; v5=0.28350; best=0.13682
+- best_utility_reference=recovery_first_policy; v5=0.20203; best=0.37119
+- best_recall_reference=typed_disagreement_protocol_v4
+- max_stress_reference=failure_aware_rl_recovery
+- fixed_risk_reference=recovery_first_policy
 
 Gate outcomes:
 - success_gate: False
-- unsafe_gate: False
-- recall_gate: True
+- safety_gate: False
+- regret_gate: False
+- utility_gate: False
+- diagnosis_gate: False
 - false_alarm_gate: True
 - ablation_gate: False
+- stress_gate: False
+- fixed_risk_gate: False
+- scope_gate: False
 
 Terminal rationale:
-- proposed does not beat strongest success baseline failure_aware_rl_recovery (0.637 vs 0.701)
-- proposed does not beat safest baseline conformal_risk_filter (0.000 vs 0.000)
-- ablations match or beat full on success/regret: minus_probe_action, minus_protocol_cost_model, recovery_only_protocol
+- v5 hard success 0.59631 does not beat recovery_first_policy 0.68866
+- v5 unsafe 0.11739 is not a useful improvement over safest variance_threshold_abstention 0.05261
+- v5 regret 0.28350 trails failure_aware_rl_recovery 0.13682
+- v5 utility 0.20203 trails recovery_first_policy 0.37119
+- v5 diagnosis accuracy/recall does not clear the frozen diagnostic gate
+- ablations match or beat the full mechanism: no_fixed_risk_budget, no_probe_action, no_value_of_information_gate, recovery_only_protocol, v4_protocol_rules
+- maximum-stress utility/success is dominated by failure_aware_rl_recovery
+- fixed-risk budget 0.05 is dominated by recovery_first_policy or has insufficient coverage
+- scope gate fails because no real robot, accepted high-fidelity benchmark, or trained checkpoint evidence exists
 
 Ablation summary:
-- recovery_only_protocol: success=0.645, unsafe=0.000, regret=0.079, type_acc=0.493
-- minus_protocol_cost_model: success=0.642, unsafe=0.000, regret=0.097, type_acc=0.491
-- minus_probe_action: success=0.635, unsafe=0.000, regret=0.103, type_acc=0.501
-- full_disagreement_protocol: success=0.631, unsafe=0.000, regret=0.116, type_acc=0.493
-- minus_calibration: success=0.598, unsafe=0.000, regret=0.154, type_acc=0.491
-- minus_disagreement_type_classifier: success=0.572, unsafe=0.001, regret=0.117, type_acc=0.265
-- variance_only_protocol: success=0.148, unsafe=0.000, regret=0.596, type_acc=0.497
+- v4_protocol_rules: success=0.62878, regret=0.19468, utility=0.29085, false_alarm=0.02205
+- no_fixed_risk_budget: success=0.62862, regret=0.19518, utility=0.29036, false_alarm=0.02283
+- recovery_only_protocol: success=0.61473, regret=0.22092, utility=0.26461, false_alarm=0.10043
+- no_probe_action: success=0.59499, regret=0.27028, utility=0.21525, false_alarm=0.00703
+- no_value_of_information_gate: success=0.59347, regret=0.27264, utility=0.21289, false_alarm=0.01406
+- full_risk_bounded_typed_disagreement_protocol_v5: success=0.58743, regret=0.29194, utility=0.19359, false_alarm=0.00773
+- no_recovery_branch: success=0.57044, regret=0.31367, utility=0.17187, false_alarm=0.00694
+- no_protocol_cost_model: success=0.55371, regret=0.35812, utility=0.12742, false_alarm=0.00868
+- no_type_classifier: success=0.53988, regret=0.38884, utility=0.09669, false_alarm=0.04306
+- conformal_filter_only: success=0.34442, regret=0.56446, utility=-0.07893, false_alarm=0.06050
 
-Representative failure cases:
-- bimanual_manipulation_failure_detection / sensor_corruption seed 0: success=0.5, regret=0.25916905112120453; diagnostic action cost exceeds the value of the additional disagreement label
-- contact_rich_pick_and_place / sensor_corruption seed 6: success=0.5340909090909091, regret=0.25713072796290143; diagnostic action cost exceeds the value of the additional disagreement label
-- contact_rich_pick_and_place / epistemic_unknown seed 1: success=0.5681818181818182, regret=0.2557587471847947; diagnostic action cost exceeds the value of the additional disagreement label
-- bimanual_manipulation_failure_detection / epistemic_unknown seed 5: success=0.48863636363636365, regret=0.2538227500871361; diagnostic action cost exceeds the value of the additional disagreement label
-- legged_locomotion_disturbance / epistemic_unknown seed 6: success=0.48863636363636365, regret=0.25196385497098633; diagnostic action cost exceeds the value of the additional disagreement label
+Representative negative cases:
+- model_misspecification_shift / legged_locomotion_disturbance / model_misspecification seed 8: success=0.44341, unsafe=0.26064, regret=0.72716; robust fallback captures much of the value without classification
+- controller_instability_shift / articulated_tool_use_with_occlusion / controller_instability seed 0: success=0.49944, unsafe=0.26138, regret=0.71068; direct recovery competes with taxonomy overhead
+- controller_instability_shift / articulated_tool_use_with_occlusion / controller_instability seed 7: success=0.50716, unsafe=0.25531, regret=0.70313; direct recovery competes with taxonomy overhead
+- model_misspecification_shift / bimanual_manipulation_failure_detection / model_misspecification seed 0: success=0.46266, unsafe=0.24971, regret=0.69104; robust fallback captures much of the value without classification
+- model_misspecification_shift / bimanual_manipulation_failure_detection / controller_instability seed 1: success=0.52062, unsafe=0.24825, regret=0.68484; direct recovery competes with taxonomy overhead
+- model_misspecification_shift / contact_rich_pick_and_place / controller_instability seed 4: success=0.52389, unsafe=0.24405, regret=0.67342; direct recovery competes with taxonomy overhead
+- model_misspecification_shift / articulated_tool_use_with_occlusion / controller_instability seed 3: success=0.52520, unsafe=0.24295, regret=0.67211; direct recovery competes with taxonomy overhead
+- model_misspecification_shift / contact_rich_pick_and_place / out_of_distribution_action seed 6: success=0.48682, unsafe=0.24959, regret=0.66891; robust fallback captures much of the value without classification
 
-Paired comparison rows: 35
-No hardware validation is claimed; this is a local executable surrogate audit.
+Pairwise rows: 96
+No hardware validation is claimed; this is a local CPU-only executable surrogate audit.
+terminal=KILL_ARCHIVE

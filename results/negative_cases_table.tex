@@ -1,0 +1,14 @@
+\begin{tabular}{llllll}
+\toprule
+Split & Task & Family & Success & Regret & Failure \\
+\midrule
+model\_misspecification\_shift & legged\_locomotion\_disturbance & model\_misspecification & 0.443 & 0.727 & robust fallback captures much of the value without classification \\
+controller\_instability\_shift & articulated\_tool\_use\_with\_occlusion & controller\_instability & 0.499 & 0.711 & direct recovery competes with taxonomy overhead \\
+controller\_instability\_shift & articulated\_tool\_use\_with\_occlusion & controller\_instability & 0.507 & 0.703 & direct recovery competes with taxonomy overhead \\
+model\_misspecification\_shift & bimanual\_manipulation\_failure\_detection & model\_misspecification & 0.463 & 0.691 & robust fallback captures much of the value without classification \\
+model\_misspecification\_shift & bimanual\_manipulation\_failure\_detection & controller\_instability & 0.521 & 0.685 & direct recovery competes with taxonomy overhead \\
+model\_misspecification\_shift & contact\_rich\_pick\_and\_place & controller\_instability & 0.524 & 0.673 & direct recovery competes with taxonomy overhead \\
+model\_misspecification\_shift & articulated\_tool\_use\_with\_occlusion & controller\_instability & 0.525 & 0.672 & direct recovery competes with taxonomy overhead \\
+model\_misspecification\_shift & contact\_rich\_pick\_and\_place & out\_of\_distribution\_action & 0.487 & 0.669 & robust fallback captures much of the value without classification \\
+\bottomrule
+\end{tabular}

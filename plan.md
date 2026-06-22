@@ -1,5 +1,9 @@
 # Plan
 
-Build paper 97 `model_disagreement_protocols` from the shared pool, execute the v4 disagreement-to-action evidence audit, compile the terminal archive PDF to Downloads only, and publish the exact-name public repo.
+Paper 97 has completed the expanded-standard v5 submission-hardening pass.
 
-Terminal v4 result: KILL_ARCHIVE after the proposed protocol lost to failure-aware recovery on combined-stress task success and ablations matched or beat the full method on success/regret.
+Frozen plan: `docs/paper97_expanded_submission_plan_20260622.md`.
+
+Result: KILL_ARCHIVE. The 31-page manuscript and v5 evidence package are stronger than the old archive, but typed disagreement still does not beat direct recovery/fallback baselines under the frozen hostile-review gates.
+
+Next allowed action: move to Paper 98 only after the public GitHub push and root ledger updates are complete.
